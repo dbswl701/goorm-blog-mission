@@ -1,0 +1,19 @@
+.LoginForm {
+	max-width: 40rem;
+
+	& > form {
+		padding: 2rem;
+
+		& > button {
+			float: right;
+		}
+
+		& > *:not(:last-child) {
+			margin-bottom: 1rem;
+		}
+	}
+
+	& > div {
+		margin: 2rem 2rem 0;
+	}
+}
