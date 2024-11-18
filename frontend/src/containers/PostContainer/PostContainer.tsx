@@ -33,6 +33,7 @@ const PostContainer = ({ id }: PostContainernterface) => {
 				contents={data.contents}
 				author={data.author}
 				createdAt={data.createdAt}
+				id={data.id}
 			/>
 		)
 	);
