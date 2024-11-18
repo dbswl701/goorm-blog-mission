@@ -1,6 +1,7 @@
 import React from 'react';
 import PostItem from '@components/PostListItem';
 import { useGetPostList } from '@hooks/useGetPostList';
+import ScrollToTopButton from '@components/ScrollToTopButton';
 
 export interface Post {
 	id: string;
@@ -55,6 +56,7 @@ const PostList = () => {
 			) : (
 				<p>모든 게시글을 불러왔습니다.</p>
 			)}
+			<ScrollToTopButton />
 		</div>
 	);
 };
