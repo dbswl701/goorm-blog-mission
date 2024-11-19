@@ -5,3 +5,8 @@ export interface PostInterface {
 	author: string;
 	createdAt: string;
 }
+
+export interface CreatePostResponse {
+	success: boolean;
+	post: PostInterface;
+}
