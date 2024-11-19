@@ -1,3 +1,5 @@
+import './Header.css';
+
 interface IProps {
 	onClose: () => void;
 	username: string;
@@ -6,8 +8,8 @@ interface IProps {
 
 const ProfileMenu = ({ onClose, username, onLogout }: IProps) => {
 	return (
-		<div>
-			<div>
+		<div className="profile-menu">
+			<div className="profile-menu-header">
 				<span>{username}</span>
 				<button onClick={onClose}>x</button>
 			</div>

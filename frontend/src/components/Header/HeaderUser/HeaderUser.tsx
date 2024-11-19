@@ -70,7 +70,11 @@ const HeaderUser = ({ username, onLogout }: HeaderUserProps) => {
 				</a>
 			)}
 
-			<div>{isSearchOpen && <SearchBar />}</div>
+			<div
+				className={`search-bar-container ${isSearchOpen ? 'open' : ''}`}
+			>
+				{isSearchOpen && <SearchBar />}
+			</div>
 		</div>
 	);
 };
