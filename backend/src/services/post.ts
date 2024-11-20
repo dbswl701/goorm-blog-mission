@@ -3,6 +3,7 @@ import {
 	getAllPosts,
 	getTotalPostsCount,
 	createPostModel,
+	updatePostModel,
 } from '../models/post/post';
 
 import { PostInterface } from '../types';
@@ -17,7 +18,7 @@ export const getPost = async (id: string): Promise<PostInterface> => {
 
 		return post;
 	} catch (error: any) {
-		throw new Error(error.message || 'Failed to fetch post');
+		throw new Error(error.message || '개시글 불러오기에 실패했습니다.');
 	}
 };
 
@@ -31,7 +32,27 @@ export const createPost = async (
 		const post = await createPostModel(title, contents, authorId);
 		return post;
 	} catch (error: any) {
-		throw new Error(error.message || 'Failed to create post');
+		throw new Error(error.message || '게시글 생성에 실패했습니다.');
+	}
+};
+
+// 게시글 수정
+export const updatePost = async (
+	id: string,
+	title: string,
+	contents: string,
+	authorId: string
+): Promise<PostInterface> => {
+	try {
+		const updatedPost = await updatePostModel(
+			id,
+			title,
+			contents,
+			authorId
+		);
+		return updatedPost;
+	} catch (error: any) {
+		throw new Error(error.message || '게시글 수정에 실패했습니다.');
 	}
 };
 

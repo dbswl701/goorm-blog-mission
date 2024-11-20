@@ -108,16 +108,36 @@ export const createPostModel = async (
 		author: new mongoose.Types.ObjectId(authorId),
 	});
 
-	// 입력 유효성 검사
-	if (!title || typeof title !== 'string') {
-		throw new Error('Invalid or missing title');
-	}
-
-	if (!contents || typeof contents !== 'string') {
-		throw new Error('Invalid or missing contents');
-	}
-
 	const savedPost = await newPost.save();
+	const populatedPost = await savedPost.populate('author', 'username');
+
+	return transformUser(populatedPost.toObject());
+};
+
+// 게시글 수정
+export const updatePostModel = async (
+	id: string,
+	title: string,
+	contents: string,
+	authorId: string
+): Promise<PostInterface> => {
+	// 게시글 찾기
+	const post = await Post.findById(id).exec();
+	if (!post) {
+		throw new Error('게시글을 찾을 수 없습니다.');
+	}
+
+	// 작성자 확인
+	if (post.author.toString() !== authorId) {
+		throw new Error('수정 권한이 없습니다.');
+	}
+
+	// 필드 업데이트
+	post.title = title;
+	post.contents = contents;
+
+	// 필드 수정
+	const savedPost = await post.save();
 	const populatedPost = await savedPost.populate('author', 'username');
 
 	return transformUser(populatedPost.toObject());
