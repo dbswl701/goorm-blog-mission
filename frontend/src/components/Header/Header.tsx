@@ -7,8 +7,10 @@ import { FaPlus, FaSearch, FaTimes, FaUserCircle } from 'react-icons/fa';
 import ProfileMenu from './ProfileMenu';
 import SearchBar from './SearchBar';
 import './Header.css';
+import { useNavigate } from 'react-router-dom';
 const Header = () => {
 	const username = useAuth();
+	const navigate = useNavigate();
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);
 
@@ -44,7 +46,7 @@ const Header = () => {
 					</button>
 					{username ? (
 						<>
-							<button>
+							<button onClick={() => navigate('/write')}>
 								<FaPlus />
 							</button>
 							<button onClick={toggleProfileMenu}>

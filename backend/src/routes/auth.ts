@@ -5,13 +5,6 @@ import { AuthInterface, UserInterface } from '../types';
 
 const router = express.Router();
 
-declare module 'express-session' {
-	interface SessionData {
-		logined: boolean;
-		user: UserInterface;
-	}
-}
-
 router.post('/signup', async (req: Request, res: Response) => {
 	const { username, password } = req.body as AuthInterface;
 
