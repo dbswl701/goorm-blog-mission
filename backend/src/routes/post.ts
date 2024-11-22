@@ -21,7 +21,9 @@ router.get('/:id', async (req: Request, res: Response, next: NextFunction) => {
 	req.defaultErrorMessage = '게시글 불러오기에 실패했습니다.';
 
 	try {
-		const post = await getPost(id);
+		const userId = req.session.user!.id;
+
+		const post = await getPost(id, userId);
 
 		res.status(200).json(post);
 	} catch (error: any) {
@@ -117,7 +119,6 @@ router.get(
 
 			// 게시글 가져오기
 			const posts = await getPosts({
-				summary: true,
 				page: pageNum,
 				limit: limitNum,
 			});

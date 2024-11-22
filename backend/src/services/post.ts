@@ -9,9 +9,12 @@ import {
 
 import { PostInterface } from '../types';
 
-export const getPost = async (id: string): Promise<PostInterface> => {
+export const getPost = async (
+	id: string,
+	currentUserId: string
+): Promise<PostInterface> => {
 	try {
-		const post = await getPostById(id);
+		const post = await getPostById(id, currentUserId);
 
 		if (!post) {
 			throw new Error('Not found post');
@@ -96,16 +99,14 @@ interface PostsResponse {
 
 // 게시글을 가져오는 함수 수정
 export const getPosts = async ({
-	summary = false,
 	page = 1,
 	limit = 10,
 }: {
-	summary: boolean;
 	page: number;
 	limit: number;
 }): Promise<PostInterface[]> => {
 	try {
-		const posts = await getAllPosts({ summary, page, limit });
+		const posts = await getAllPosts({ page, limit });
 
 		if (!posts) {
 			throw new Error('Not found posts');

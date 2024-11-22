@@ -18,4 +18,7 @@ export interface PostInterface {
 	title: string;
 	author: string;
 	contents: string;
+	likeCount: number;
+	createdAt: Date;
+	updatedAt: Date;
 }
