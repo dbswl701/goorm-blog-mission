@@ -4,6 +4,7 @@ import {
 	getTotalPostsCount,
 	createPostModel,
 	updatePostModel,
+	deletePostMoel,
 } from '../models/post/post';
 
 import { PostInterface } from '../types';
@@ -56,6 +57,14 @@ export const updatePost = async (
 	}
 };
 
+// 게시글 삭제
+export const deletePost = async (
+	id: string,
+	authorId: string
+): Promise<void> => {
+	// 유효한 ID인지 확인
+	await deletePostMoel(id, authorId);
+};
 // export const getPosts = async ({
 // 	summary = false,
 // }: {

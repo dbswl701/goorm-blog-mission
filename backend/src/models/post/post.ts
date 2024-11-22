@@ -142,3 +142,23 @@ export const updatePostModel = async (
 
 	return transformUser(populatedPost.toObject());
 };
+
+// 게시글 삭제
+export const deletePostMoel = async (
+	id: string,
+	authorId: string
+): Promise<void> => {
+	// 게시글 찾기
+	const post = await Post.findById(id).exec();
+	if (!post) {
+		throw new Error('게시글을 찾을 수 없습니다.');
+	}
+
+	// 작성자 확인
+	if (post.author.toString() !== authorId) {
+		throw new Error('삭제 권한이 없습니다.');
+	}
+
+	// 게시글 삭제
+	await Post.findByIdAndDelete(id).exec();
+};

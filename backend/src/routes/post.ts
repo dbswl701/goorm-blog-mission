@@ -1,6 +1,12 @@
 import express from 'express';
 import { Request, Response } from 'express';
-import { createPost, getPost, getPosts, updatePost } from '../services/post';
+import {
+	createPost,
+	deletePost,
+	getPost,
+	getPosts,
+	updatePost,
+} from '../services/post';
 import { getTotalPostsCount } from '../models/post/post';
 import { authenticate } from '../middleware/auth';
 
@@ -85,38 +91,66 @@ router.put(`/:id`, authenticate, async (req: Request, res: Response) => {
 // 	}
 // });
 
-router.get('/', async (req: Request, res: Response) => {
-	try {
-		// 쿼리 파라미터에서 page와 limit을 가져오고 기본값 설정
-		const { page = '1', limit = '10' } = req.query;
-		const pageNum = parseInt(page as string, 10);
-		const limitNum = parseInt(limit as string, 10);
+router.get(
+	'/',
+	async (req: Request, res: Response) => {
+		try {
+			// 쿼리 파라미터에서 page와 limit을 가져오고 기본값 설정
+			const { page = '1', limit = '10' } = req.query;
+			const pageNum = parseInt(page as string, 10);
+			const limitNum = parseInt(limit as string, 10);
 
-		// 유효성 검사
-		if (isNaN(pageNum) || pageNum < 1) {
-			return res
-				.status(400)
-				.json({ result: false, message: 'Invalid page number' });
+			// 유효성 검사
+			if (isNaN(pageNum) || pageNum < 1) {
+				return res
+					.status(400)
+					.json({ result: false, message: 'Invalid page number' });
+			}
+
+			if (isNaN(limitNum) || limitNum < 1) {
+				return res
+					.status(400)
+					.json({ result: false, message: 'Invalid limit number' });
+			}
+
+			// 게시글 가져오기
+			const posts = await getPosts({
+				summary: true,
+				page: pageNum,
+				limit: limitNum,
+			});
+			const total = await getTotalPostsCount();
+
+			res.status(200).json({
+				posts,
+				total,
+				page: pageNum,
+				limit: limitNum,
+			});
+		} catch (error: any) {
+			res.status(500).json({ result: false, message: error.message });
 		}
+	},
 
-		if (isNaN(limitNum) || limitNum < 1) {
-			return res
-				.status(400)
-				.json({ result: false, message: 'Invalid limit number' });
+	// 게시글 삭제
+	router.delete('/:id', authenticate, async (req: Request, res: Response) => {
+		const { id } = req.params;
+
+		try {
+			const authorId = req.session.user!.id;
+			await deletePost(id, authorId);
+
+			res.status(200).json({
+				result: true,
+				message: '게시글이 성공적으로 삭제되었습니다.',
+			});
+		} catch (error: any) {
+			res.status(500).json({
+				result: false,
+				message: error.message || '게시글 삭제에 실패했습니다.',
+			});
 		}
-
-		// 게시글 가져오기
-		const posts = await getPosts({
-			summary: true,
-			page: pageNum,
-			limit: limitNum,
-		});
-		const total = await getTotalPostsCount();
-
-		res.status(200).json({ posts, total, page: pageNum, limit: limitNum });
-	} catch (error: any) {
-		res.status(500).json({ result: false, message: error.message });
-	}
-});
+	})
+);
 
 export default router;
