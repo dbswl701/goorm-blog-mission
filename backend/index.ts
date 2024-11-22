@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import { createServer } from 'http';
 import mongoose from 'mongoose';
 import session from 'express-session';
@@ -9,6 +9,7 @@ import authRouter from './src/routes/auth';
 import postRouter from './src/routes/post';
 
 import { CorsConfigInterface } from './src/types';
+import { errorHandler } from './src/middleware/errorHandler';
 
 dotenv.config({ path: '../.env' });
 
@@ -34,6 +35,9 @@ app.use(sessionInstance);
 
 app.use('/auth', authRouter);
 app.use('/posts', postRouter);
+
+// 글로벌 에러 핸들러
+app.use(errorHandler);
 
 mongoose
 	.connect(process.env.MONGO_URI as string)

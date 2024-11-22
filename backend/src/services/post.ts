@@ -105,10 +105,6 @@ export const getPosts = async ({
 	limit: number;
 }): Promise<PostInterface[]> => {
 	try {
-		if (typeof summary !== 'boolean') {
-			throw new Error('summary is invalid');
-		}
-
 		const posts = await getAllPosts({ summary, page, limit });
 
 		if (!posts) {

@@ -60,7 +60,6 @@ export const getPostById = async (
 
 // 실제 게시글을 데이터베이스에서 가져오는 함수 수정
 export const getAllPosts = async ({
-	summary = false,
 	page = 1,
 	limit = 10,
 }: {
@@ -68,10 +67,6 @@ export const getAllPosts = async ({
 	page: number;
 	limit: number;
 }): Promise<PostInterface[] | null> => {
-	if (typeof summary !== 'boolean') {
-		throw new Error('Invalid summary');
-	}
-
 	const skip = (page - 1) * limit;
 
 	const posts = await Post.find({}, { __v: 0 })

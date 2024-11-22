@@ -1,6 +1,5 @@
 // middleware/authenticate.ts
 import { Request, Response, NextFunction } from 'express';
-import { UserInterface } from '../types';
 
 export const authenticate = (
 	req: Request,
