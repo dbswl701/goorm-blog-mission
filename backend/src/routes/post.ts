@@ -13,6 +13,7 @@ import mongoose, { isValidObjectId } from 'mongoose';
 import { BadRequestError } from '../errors/BadRequestError';
 import { isValidString } from '../utils/validation';
 import { likePost, unLikePost } from '../services/like';
+import commentRouter from './comment'; // 댓글 라우터 임포트
 
 const router = express.Router();
 
@@ -233,5 +234,8 @@ router.get(
 		}
 	)
 );
+
+// 댓글 라우터 연결
+router.use('/:postId/comments', commentRouter);
 
 export default router;
