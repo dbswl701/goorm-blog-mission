@@ -9,9 +9,10 @@ import {
 } from '../services/post';
 import { getTotalPostsCount } from '../models/post/post';
 import { authenticate } from '../middleware/auth';
-import { isValidObjectId } from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { BadRequestError } from '../errors/BadRequestError';
 import { isValidString } from '../utils/validation';
+import { likePost, unLikePost } from '../services/like';
 
 const router = express.Router();
 
@@ -159,6 +160,73 @@ router.get(
 					message: '게시글이 성공적으로 삭제되었습니다.',
 				});
 			} catch (error: any) {
+				next(error);
+			}
+		}
+	),
+
+	// 좋아요 추가
+	router.post(
+		'/:id/like',
+		authenticate,
+		async (req: Request, res: Response, next: NextFunction) => {
+			const { id } = req.params;
+			const userId = req.session.user!.id;
+			req.defaultErrorMessage = '좋아요에 실패했습니다.';
+
+			try {
+				if (!mongoose.Types.ObjectId.isValid(id)) {
+					throw new BadRequestError(
+						'유효하지 않은 게시글 ID 입니다.'
+					);
+				}
+				if (!mongoose.Types.ObjectId.isValid(userId)) {
+					throw new BadRequestError(
+						'유효하지 않은 사용자 ID 입니다.'
+					);
+				}
+
+				await likePost(id, userId);
+				res.status(200).json({
+					success: true,
+					data: {
+						message: '게시글에 좋아요를 추가했습니다.',
+					},
+				});
+			} catch (error) {
+				next(error);
+			}
+		}
+	),
+
+	// 좋아요 취소
+	router.post(
+		'/:id/unlike',
+		authenticate,
+		async (req: Request, res: Response, next: NextFunction) => {
+			const { id } = req.params;
+			const userId = req.session.user!.id;
+			req.defaultErrorMessage = '좋아요 취소에 실패했습니다.';
+
+			try {
+				if (!mongoose.Types.ObjectId.isValid(id)) {
+					throw new BadRequestError(
+						'유효하지 않은 게시글 ID 입니다.'
+					);
+				}
+				if (!mongoose.Types.ObjectId.isValid(userId)) {
+					throw new BadRequestError(
+						'유효하지 않은 사용자 ID 입니다.'
+					);
+				}
+				await unLikePost(id, userId);
+				res.status(200).json({
+					success: true,
+					data: {
+						message: '게시글의 좋아요를 취소했습니다.',
+					},
+				});
+			} catch (error) {
 				next(error);
 			}
 		}

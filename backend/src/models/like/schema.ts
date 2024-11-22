@@ -2,14 +2,14 @@
 import { Schema, model, Types } from 'mongoose';
 
 interface LikeSchemaInterface {
-	post: Types.ObjectId;
-	user: Types.ObjectId;
+	postId: Types.ObjectId;
+	userId: Types.ObjectId;
 }
 
 const likeSchema = new Schema<LikeSchemaInterface>(
 	{
-		post: { type: Schema.Types.ObjectId, required: true, ref: 'Post' },
-		user: { type: Schema.Types.ObjectId, required: true, ref: 'Users' },
+		postId: { type: Schema.Types.ObjectId, required: true, ref: 'Post' },
+		userId: { type: Schema.Types.ObjectId, required: true, ref: 'Users' },
 	},
 	{
 		timestamps: true,
