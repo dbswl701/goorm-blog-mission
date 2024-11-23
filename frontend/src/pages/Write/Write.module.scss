@@ -21,20 +21,52 @@
 	&__title {
 		resize: none;
 		outline: none;
-		border: 1px solid gray;
-		width: 50%;
-		border-radius: 10px;
+		border: none;
+		border-bottom: 2px solid gray;
+		width: 100%;
 		padding: 5px 8px;
-		font-size: 20px;
+		margin-bottom: 10px;
+		background: transparent;
+		font-size: 2rem;
 		font-weight: bold;
+		height: 5.5rem; /* 초기 높이를 조정 */
+		line-height: 2.5rem; /* 텍스트와 높이 일치 */
+		// overflow: hidden; /* 스크롤바 숨김 */
 	}
 
 	&__header {
 		display: flex;
 		justify-content: space-between;
+		margin-top: 15px;
 	}
 
 	&__submitBtn {
 		padding: 3px 6px;
+		background-color: var(--color-primary);
+		height: 2.5rem;
+		font-size: 1.125rem;
+		color: white;
+		border-radius: 4px;
+		padding: 0px 1.25rem;
+		border: none;
+
+		&:hover {
+			background-color: var(--color-primary-hover);
+		}
+	}
+
+	&__previousBtn {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		cursor: pointer;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			background-color: rgb(209, 209, 209);
+		}
 	}
 }

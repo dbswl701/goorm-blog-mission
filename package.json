@@ -23,6 +23,7 @@
 		"prettier": "3.3.2"
 	},
 	"dependencies": {
-		"@uiw/react-md-editor": "^4.0.4"
+		"@uiw/react-md-editor": "^4.0.4",
+		"remark-breaks": "^4.0.0"
 	}
 }

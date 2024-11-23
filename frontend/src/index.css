@@ -14,8 +14,14 @@
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 
+	--color-primary: #4caf50; /* 메인 컬러 */
+	--color-primary-hover: #409543;
+	--color-secondary: #ff9800; /* 보조 컬러 */
+	--color-background: #fafafa; /* 배경 */
+	--color-text: #212121; /* 기본 텍스트 */
+	--color-accent: #ff5722; /* 강조 */
 
-	--wp--preset--aspect-ratio--square: 1;
+	/* --wp--preset--aspect-ratio--square: 1;
     --wp--preset--aspect-ratio--4-3: 4 / 3;
     --wp--preset--aspect-ratio--3-4: 3 / 4;
     --wp--preset--aspect-ratio--3-2: 3 / 2;
@@ -64,7 +70,7 @@
     --wp--preset--shadow--deep: 12px 12px 50px rgba(0, 0, 0, 0.4);
     --wp--preset--shadow--sharp: 6px 6px 0px rgba(0, 0, 0, 0.2);
     --wp--preset--shadow--outlined: 6px 6px 0px -3px rgba(255, 255, 255, 1), 6px 6px rgba(0, 0, 0, 1);
-    --wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1);
+    --wp--preset--shadow--crisp: 6px 6px 0px rgba(0, 0, 0, 1); */
 }
 
 body {
