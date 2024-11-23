@@ -6,6 +6,9 @@ import {
 	getCommentsByPostId,
 	updateComment,
 } from '../services/comment';
+import mongoose from 'mongoose';
+import { BadRequestError } from '../errors/BadRequestError';
+import { isValidString } from '../utils/validation';
 
 const router = express.Router({ mergeParams: true }); // 부모 라우트의 params를 병합
 
@@ -20,6 +23,19 @@ router.post(
 		const { content } = req.body;
 
 		try {
+			// 유효성 검사
+			if (!mongoose.Types.ObjectId.isValid(postId)) {
+				throw new BadRequestError('유효하지 않은 게시글 ID입니다.');
+			}
+			if (!mongoose.Types.ObjectId.isValid(userId)) {
+				throw new BadRequestError('유효하지 않은 사용자 ID입니다.');
+			}
+			if (!isValidString(content)) {
+				throw new BadRequestError(
+					'댓글 내용은 빈 문자열일 수 없습니다.'
+				);
+			}
+
 			const newComment = await createComment(
 				postId,
 				userId,
@@ -44,6 +60,11 @@ router.get(
 		const { postId } = req.params;
 
 		try {
+			// 유효성 검사
+			if (!mongoose.Types.ObjectId.isValid(postId)) {
+				throw new BadRequestError('유효하지 않은 게시글 ID입니다.');
+			}
+
 			const comments = await getCommentsByPostId(postId);
 			res.status(200).json({
 				success: true,
@@ -66,6 +87,22 @@ router.put(
 		const { content } = req.body;
 
 		try {
+			// 유효성 검사
+			if (!mongoose.Types.ObjectId.isValid(commentId)) {
+				throw new BadRequestError('유효하지 않은 게시글 ID입니다.');
+			}
+			if (!mongoose.Types.ObjectId.isValid(userId)) {
+				throw new BadRequestError('유효하지 않은 댓글 ID입니다.');
+			}
+			if (!isValidString(userName)) {
+				throw new BadRequestError('유효하지 않은 사용자 이름입니다.');
+			}
+			if (!isValidString(content)) {
+				throw new BadRequestError(
+					'댓글 내용은 빈 문자열일 수 없습니다.'
+				);
+			}
+
 			const updatedComment = await updateComment(
 				commentId,
 				userId,
@@ -91,6 +128,14 @@ router.delete(
 		const userId = req.session.user!.id;
 
 		try {
+			// 유효성 검사
+			if (!mongoose.Types.ObjectId.isValid(commentId)) {
+				throw new BadRequestError('유효하지 않은 게시글 ID입니다.');
+			}
+			if (!mongoose.Types.ObjectId.isValid(userId)) {
+				throw new BadRequestError('유효하지 않은 댓글 ID입니다.');
+			}
+
 			await deleteComment(commentId, userId);
 			res.status(200).json({
 				success: true,

@@ -2,6 +2,7 @@ import mongoose from 'mongoose';
 import Post from './schema';
 import { PostInterface } from '../../types';
 import { NotFoundError } from '../../errors/NotFoundError';
+import postModel from './schema';
 
 export const transformUserWithPopulate = (post: any): PostDetailed => {
 	const { _id, author, ...rest } = post;
@@ -217,4 +218,10 @@ export const deletePostMoel = async (
 
 	// 게시글 삭제
 	await Post.findByIdAndDelete(id).exec();
+};
+
+// 게시글 존재 여부 확인
+export const isPostExists = async (postId: string) => {
+	const postExists = await postModel.exists({ _id: postId });
+	return !!postExists;
 };

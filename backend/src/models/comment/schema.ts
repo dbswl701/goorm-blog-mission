@@ -1,7 +1,8 @@
 // comment.ts
 import { Schema, model, Types } from 'mongoose';
 
-interface CommentSchemaInterface {
+export interface CommentSchemaInterface {
+	_id: Types.ObjectId;
 	postId: Types.ObjectId;
 	author: Types.ObjectId;
 	content: string;
