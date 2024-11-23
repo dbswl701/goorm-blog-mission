@@ -1,5 +1,9 @@
+import ConfirmModal from '@components/ConfirmModal';
 import Post from '@components/Post';
 import { useGetPost } from '@hooks/useGetPost';
+import { useState } from 'react';
+import { useDeletePost } from '@hooks/useDeletePost';
+import { useParams } from 'react-router-dom';
 
 interface PostContainernterface {
 	id: string;
@@ -8,16 +12,43 @@ interface PostContainernterface {
 const PostContainer = ({ id }: PostContainernterface) => {
 	const { data, isLoading, error } = useGetPost(id);
 
+	const [isModalOpen, setModalOpen] = useState(false);
+
+	const { mutate: deletePost } = useDeletePost();
+
+	const handleDeleteClick = () => {
+		setModalOpen(true);
+	};
+
+	const handleConfirmDelete = () => {
+		setModalOpen(false);
+		if (id) {
+			deletePost(id);
+		}
+	};
+
+	const handleCancelDelete = () => {
+		setModalOpen(false);
+	};
 	return (
-		data && (
-			<Post
-				title={data.title}
-				contents={data.contents}
-				author={data.author}
-				createdAt={data.createdAt}
-				id={data.id}
+		<>
+			{data && (
+				<Post
+					title={data.title}
+					contents={data.contents}
+					author={data.author}
+					createdAt={data.createdAt}
+					id={data.id}
+					handleDeleteClick={handleDeleteClick}
+				/>
+			)}
+			<ConfirmModal
+				isOpen={isModalOpen}
+				message="게시글을 삭제하시겠습니까?"
+				onConfirm={handleConfirmDelete}
+				onCancel={handleCancelDelete}
 			/>
-		)
+		</>
 	);
 };
 

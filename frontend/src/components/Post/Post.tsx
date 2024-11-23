@@ -28,7 +28,18 @@ const ActionButton = styled.button`
 	}
 `;
 
-const Post = ({ id, title, contents, author, createdAt }: PostInterface) => {
+interface IProps extends PostInterface {
+	handleDeleteClick: () => void;
+}
+
+const Post = ({
+	id,
+	title,
+	contents,
+	author,
+	createdAt,
+	handleDeleteClick,
+}: IProps) => {
 	const navigate = useNavigate();
 	return (
 		<section className="p-4">
@@ -46,7 +57,9 @@ const Post = ({ id, title, contents, author, createdAt }: PostInterface) => {
 						>
 							수정
 						</ActionButton>
-						<ActionButton>삭제</ActionButton>
+						<ActionButton onClick={handleDeleteClick}>
+							삭제
+						</ActionButton>
 					</div>
 				</div>
 			</div>
