@@ -5,9 +5,11 @@ import styled from 'styled-components';
 import { usePostCreatePost } from '@hooks/usePostCreatePost';
 import remarkBreaks from 'remark-breaks';
 import { GrPrevious } from 'react-icons/gr';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import useAuth from '@hooks/useAuth';
 import { toast } from 'react-toastify';
+import { useGetPost } from '@hooks/useGetPost';
+import { usePutPost } from '@hooks/usePutPost';
 
 const EditorContainer = styled.div`
 	width: 100vw;
@@ -47,6 +49,21 @@ const Write = () => {
 	const [contents, setContents] = useState('');
 	const [isMobile, setIsMobile] = useState(false);
 	const navigate = useNavigate();
+	const [searchParams] = useSearchParams();
+	const [isModify, setIsModify] = useState(false);
+	const id = searchParams.get('id') as string;
+	console.log('id: ', id);
+
+	const { data, isLoading, error } = useGetPost(id as string);
+
+	useEffect(() => {
+		if (data) {
+			console.log('data: ', data);
+			setTitle(data.title);
+			setContents(data.contents);
+			setIsModify(true);
+		}
+	}, []);
 
 	const username = useAuth();
 	if (username === '') {
@@ -54,7 +71,8 @@ const Write = () => {
 		return;
 	}
 
-	const { mutate } = usePostCreatePost();
+	const { mutate: postMutate } = usePostCreatePost();
+	const { mutate: putMutate } = usePutPost();
 	// 모바일 여부 감지
 	useEffect(() => {
 		const handleResize = () => {
@@ -74,7 +92,11 @@ const Write = () => {
 			return;
 		}
 
-		mutate({ title: title.trim(), contents: contents.trim() });
+		if (isModify) {
+			putMutate({ id, title: title.trim(), contents: contents.trim() });
+		} else {
+			postMutate({ title: title.trim(), contents: contents.trim() });
+		}
 	};
 
 	return (

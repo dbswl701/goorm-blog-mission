@@ -1,5 +1,6 @@
 import { PostInterface } from '@type/post';
 import MDEditor from '@uiw/react-md-editor';
+import { useNavigate } from 'react-router-dom';
 import remarkBreaks from 'remark-breaks';
 import styled from 'styled-components';
 import { formatDate } from 'utils/formatDate';
@@ -17,26 +18,49 @@ const StyledEditor = styled(MDEditor)`
 	}
 	flex: 1; /* 남은 공간을 모두 차지 */
 `;
-const Post = ({ title, contents, author, createdAt }: PostInterface) => (
-	<section className="p-4">
-		<div className="d-flex w-100 align-items-baseline gap-2 flex-column">
-			<h2 className="mb-1">{title}</h2>
-			<div className="d-flex gap-2">
-				<small className="fw-bold">{author}</small>
-				{'·'}
-				<small>{formatDate(createdAt)}</small>
-			</div>
-		</div>
 
-		<StyledEditor
-			value={contents}
-			previewOptions={{
-				remarkPlugins: [remarkBreaks],
-			}}
-			height={'67vh'}
-			preview={'preview'}
-		/>
-	</section>
-);
+const ActionButton = styled.button`
+	border: none;
+	background-color: transparent;
+	color: #868e96;
+	&: hover {
+		color: #212529;
+	}
+`;
+
+const Post = ({ id, title, contents, author, createdAt }: PostInterface) => {
+	const navigate = useNavigate();
+	return (
+		<section className="p-4">
+			<div className="d-flex w-100 align-items-baseline gap-2 flex-column">
+				<h2 className="mb-1">{title}</h2>
+				<div className="d-flex justify-content-between w-100">
+					<div className="d-flex gap-2">
+						<small className="fw-bold">{author}</small>
+						{'·'}
+						<small>{formatDate(createdAt)}</small>
+					</div>
+					<div className="d-flex gap-2">
+						<ActionButton
+							onClick={() => navigate(`/write?id=${id}`)}
+						>
+							수정
+						</ActionButton>
+						<ActionButton>삭제</ActionButton>
+					</div>
+				</div>
+			</div>
+
+			<StyledEditor
+				value={contents}
+				previewOptions={{
+					remarkPlugins: [remarkBreaks],
+				}}
+				height={'67vh'}
+				preview={'preview'}
+			/>
+		</section>
+	);
+};
 
 export default Post;
