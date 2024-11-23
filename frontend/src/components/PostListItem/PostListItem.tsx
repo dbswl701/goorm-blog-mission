@@ -1,3 +1,5 @@
+import { formatDate } from 'utils/formatDate';
+
 interface PostListItemProps {
 	id: string;
 	title: string;
@@ -20,7 +22,7 @@ const PostListItem = ({
 	>
 		<div className="d-flex w-100 justify-content-between">
 			<h5 className="mb-1">{title}</h5>
-			<small>{createdAt}</small>
+			<small>{formatDate(createdAt)}</small>
 		</div>
 		<p className="mb-1">{summary}</p>
 		<small>by {author}</small>
