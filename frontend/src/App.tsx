@@ -6,6 +6,8 @@ import Login from '@pages/Login';
 import Signup from '@pages/Signup';
 import Post from '@pages/Post';
 import Write from '@pages/Write/Write';
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 function App() {
 	return (
@@ -21,6 +23,7 @@ function App() {
 					</Route>
 				</Routes>
 			</BrowserRouter>
+			<ToastContainer />
 		</div>
 	);
 }

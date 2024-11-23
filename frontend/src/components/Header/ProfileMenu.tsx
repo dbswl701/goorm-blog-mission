@@ -18,7 +18,7 @@ const ProfileMenu = ({ onClose, username, onLogout }: IProps) => {
 					<a href="/lian">내 블로그</a>
 				</li>
 				<li>
-					<a href="/post">새 글 작성</a>
+					<a href="/write">새 글 작성</a>
 				</li>
 				<li>
 					<span onClick={onLogout}>로그아웃</span>
