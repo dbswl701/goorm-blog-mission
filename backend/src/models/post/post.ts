@@ -3,6 +3,10 @@ import Post from './schema';
 import { PostInterface } from '../../types';
 import { NotFoundError } from '../../errors/NotFoundError';
 import postModel from './schema';
+import { GetPostsParams } from '../../services/post';
+import { buildSearchCondition } from '../../utils/search';
+import likeModel from '../like/schema';
+import commentModel from '../comment/schema';
 
 export const transformUserWithPopulate = (post: any): PostDetailed => {
 	const { _id, author, ...rest } = post;
@@ -83,69 +87,72 @@ export const getPostById = async (
 	}
 };
 
+export interface GetAllPosts extends PostInterface {
+	likeCount: number;
+	commentCount: number;
+}
+
 // 실제 게시글을 데이터베이스에서 가져오는 함수 수정
 export const getAllPosts = async ({
-	page = 1,
-	limit = 10,
-}: {
-	page: number;
-	limit: number;
-}): Promise<PostInterface[] | null> => {
+	page,
+	limit,
+	sort,
+	search,
+	searchBy,
+}: GetPostsParams): Promise<{ posts: GetAllPosts[]; total: number }> => {
 	const skip = (page - 1) * limit;
 
-	// const posts = await Post.find({}, { __v: 0 })
-	// 	.sort({ _id: -1 }) // 최신 게시글이 먼저 오도록 정렬
-	// 	.populate('author', 'username') // author 필드의 username만 가져오기
-	// 	.skip(skip) // 건너뛸 게시글 수
-	// 	.limit(limit) // 가져올 게시글 수
-	// 	.lean()
-	// 	.exec();
+	// 검색 조건 생성
+	const searchCondition = buildSearchCondition(search, searchBy);
 
-	const posts = await Post.aggregate([
-		{ $sort: { _id: -1 } },
-		{ $skip: skip },
-		{ $limit: limit },
-		{
-			$lookup: {
-				from: 'likes',
-				localField: '_id',
-				foreignField: 'postId',
-				as: 'likes',
-			},
-		},
-		{
-			$lookup: {
-				from: 'users',
-				localField: 'author',
-				foreignField: '_id',
-				as: 'authorDetails',
-			},
-		},
-		{
-			$addFields: {
-				likeCount: { $size: '$likes' },
-				authorUsername: {
-					$arrayElemAt: ['$authorDetails.username', 0],
-				},
-			},
-		},
-		{
-			$project: {
-				likes: 0, // 원본 likes 배열 제외
-				authorDetails: 0,
-			},
-		},
-	]);
+	// 정렬 조건 생성
+	let sortCondition: any = {};
+	switch (sort) {
+		case 'likes':
+			sortCondition = { likeCount: -1 };
+			break;
+		case 'comments':
+			sortCondition = { commentCount: -1 };
+			break;
+		case 'latest':
+		default:
+			sortCondition = { createdAt: -1 };
+			break;
+	}
 
-	return posts.map((post: any) => ({
-		id: post._id.toString(),
-		title: post.title,
-		contents: post.contents,
-		author: post.authorUsername,
-		likeCount: post.likeCount,
-		createdAt: post.createdAt,
-		updatedAt: post.updatedAt,
-	}));
+	// 검색 결과 총 개수 계산
+	const total = await Post.countDocuments(searchCondition);
+
+	// 페이지네이션된 게시글 조회
+	const query = Post.find(searchCondition)
+		.sort(sortCondition)
+		.skip(skip)
+		.limit(limit)
+		.populate('author', 'username') // 작성자의 username만 가져오기
+		.lean(); // Mongoose Document 대신 일반 JS 객체 반환
+	const posts = await query.exec();
+
+	// 좋아요 개수 및 댓글 개수 추가
+	const result: GetAllPosts[] = [];
+	for (const post of posts) {
+		const likeCount = await likeModel.countDocuments({ postId: post._id });
+		const commentCount = await commentModel.countDocuments({
+			postId: post._id,
+		});
+
+		result.push({
+			id: post._id.toString(),
+			title: post.title,
+			contents: post.contents,
+			author: (post.author as any).username,
+			likeCount,
+			commentCount,
+			createdAt: post.createdAt,
+			updatedAt: post.updatedAt,
+		});
+	}
+
+	return { posts: result, total };
 };
 
 // 총 게시글 수를 가져오는 함수 추가

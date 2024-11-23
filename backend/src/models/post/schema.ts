@@ -4,6 +4,8 @@ interface PostSchema {
 	title: string;
 	author: Types.ObjectId;
 	contents: string;
+	createdAt: Date;
+	updatedAt: Date;
 }
 
 const postSchema = new Schema<PostSchema>(

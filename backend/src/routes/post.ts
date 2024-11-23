@@ -104,10 +104,19 @@ router.get(
 
 		try {
 			// 쿼리 파라미터에서 page와 limit을 가져오고 기본값 설정
-			const { page = '1', limit = '10' } = req.query;
+			const {
+				page = '1',
+				limit = '10',
+				sort = 'latest',
+				search = '',
+				searchBy = 'all',
+			} = req.query;
 
 			const pageNum = Number(page);
 			const limitNum = Number(limit);
+			const sortStr = String(sort);
+			const searchStr = String(search);
+			const searchByStr = String(searchBy);
 
 			// 유효성 검사
 			if (!Number.isInteger(pageNum) || pageNum < 1) {
@@ -118,18 +127,34 @@ router.get(
 				throw new BadRequestError('유효하지 않은 limit 입니다.');
 			}
 
+			// 정렬 옵션 유효성 검사
+			const validSortOptions = ['likes', 'comments', 'latest'];
+			if (!validSortOptions.includes(sort as string)) {
+				throw new BadRequestError('유효하지 않은 정렬 옵션입니다.');
+			}
+
+			// 검색 옵션 유효성 검사
+			const validSearchOptions = ['author', 'title', 'contents', 'all'];
+			if (!validSearchOptions.includes(searchBy as string)) {
+				throw new BadRequestError(
+					'유효하지 않은 검색 필터 옵션입니다.'
+				);
+			}
+
 			// 게시글 가져오기
-			const posts = await getPosts({
+			const { posts, total } = await getPosts({
 				page: pageNum,
 				limit: limitNum,
+				sort: sortStr,
+				search: searchStr,
+				searchBy: searchByStr,
 			});
-			const total = await getTotalPostsCount();
 
 			res.status(200).json({
 				posts,
 				total,
 				page: pageNum,
-				limit: limitNum,
+				totalPage: Math.ceil(total / limitNum),
 			});
 		} catch (error: any) {
 			next(error);
