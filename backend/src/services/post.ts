@@ -49,17 +49,8 @@ export const updatePost = async (
 	contents: string,
 	authorId: string
 ): Promise<PostInterface> => {
-	try {
-		const updatedPost = await updatePostModel(
-			id,
-			title,
-			contents,
-			authorId
-		);
-		return updatedPost;
-	} catch (error: any) {
-		throw new Error(error.message || '게시글 수정에 실패했습니다.');
-	}
+	const updatedPost = await updatePostModel(id, title, contents, authorId);
+	return updatedPost;
 };
 
 // 게시글 삭제
@@ -67,7 +58,6 @@ export const deletePost = async (
 	id: string,
 	authorId: string
 ): Promise<void> => {
-	// 유효한 ID인지 확인
 	await deletePostMoel(id, authorId);
 };
 

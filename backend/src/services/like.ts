@@ -1,4 +1,4 @@
-import { isValidObjectId } from 'mongoose';
+import mongoose, { isValidObjectId } from 'mongoose';
 import { BadRequestError } from '../errors/BadRequestError';
 import postModel from '../models/post/schema';
 import { NotFoundError } from '../errors/NotFoundError';
@@ -17,18 +17,18 @@ export const likePost = async (
 			throw new NotFoundError('해당 게시글이 존재하지 않습니다.');
 		}
 
-		// 좋아요 중복 방지(인덱스 설정으로 자동 방지 가능하지만, 명시적으로 처리)
-		const existingLike = await likeModel.findOne({ postId, userId }).exec();
-		const likes = await likeModel.find({});
-		console.log('likes: ', likes);
-		if (existingLike) {
+		// 좋아요 추가
+		const like = new likeModel({
+			postId,
+			userId,
+		});
+
+		await like.save();
+	} catch (error: any) {
+		// unique index 에러 처리
+		if (error.code === 11000) {
 			throw new AlreadyLikedError('이미 좋아요를 누른 게시글입니다.');
 		}
-
-		// 좋아요 추가
-		const like = new likeModel({ postId, userId });
-		await like.save();
-	} catch (error) {
 		throw error;
 	}
 };
@@ -44,16 +44,13 @@ export const unLikePost = async (
 			throw new NotFoundError('해당 게시글이 존재하지 않습니다.');
 		}
 
-		// 좋아요 여부 확인
-		const existingLike = await likeModel.findOne({ postId, userId }).exec();
-		const likes = await likeModel.find({});
-		console.log('likes: ', likes);
-		if (!existingLike) {
+		// 좋아요 제거
+		const result = await likeModel.deleteOne({ postId, userId }).exec();
+
+		// 삭제된 문서가 없으면 이미 좋아요가 취소된 상태
+		if (result.deletedCount === 0) {
 			throw new NotLikedError('이미 좋아요 취소된 게시물입니다.');
 		}
-
-		// 좋아요 제거
-		await likeModel.deleteOne({ postId, userId }).exec();
 	} catch (error) {
 		throw error;
 	}

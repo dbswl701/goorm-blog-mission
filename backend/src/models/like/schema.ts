@@ -17,7 +17,7 @@ const likeSchema = new Schema<LikeSchemaInterface>(
 );
 
 // 중복 좋아요 방지를 위한 유니크 인덱스 설정
-likeSchema.index({ post: 1, user: 1 }, { unique: true });
+likeSchema.index({ postId: 1, userId: 1 }, { unique: true });
 
 const likeModel = model<LikeSchemaInterface>('Like', likeSchema);
 
