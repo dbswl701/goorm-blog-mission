@@ -1,8 +1,7 @@
-import { BadRequestError } from '../errors/BadRequestError';
+import { NotFoundError } from '../errors/NotFoundError';
 import {
 	getPostById,
 	getAllPosts,
-	getTotalPostsCount,
 	createPostModel,
 	updatePostModel,
 	deletePostMoel,
@@ -15,17 +14,9 @@ export const getPost = async (
 	id: string,
 	currentUserId: string
 ): Promise<PostInterface> => {
-	try {
-		const post = await getPostById(id, currentUserId);
+	const post = await getPostById(id, currentUserId);
 
-		if (!post) {
-			throw new Error('Not found post');
-		}
-
-		return post;
-	} catch (error: any) {
-		throw new Error(error.message || '개시글 불러오기에 실패했습니다.');
-	}
+	return post;
 };
 
 // 게시글 생성
@@ -34,12 +25,8 @@ export const createPost = async (
 	contents: string,
 	authorId: string
 ): Promise<PostInterface> => {
-	try {
-		const post = await createPostModel(title, contents, authorId);
-		return post;
-	} catch (error: any) {
-		throw new Error(error.message || '게시글 생성에 실패했습니다.');
-	}
+	const post = await createPostModel(title, contents, authorId);
+	return post;
 };
 
 // 게시글 수정

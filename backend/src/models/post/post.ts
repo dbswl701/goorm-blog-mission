@@ -29,65 +29,60 @@ export const getPostById = async (
 	id: string,
 	currentUserId: string
 ): Promise<PostDetailed> => {
-	try {
-		const post = await Post.aggregate([
-			{ $match: { _id: new mongoose.Types.ObjectId(id) } },
-			{
-				$lookup: {
-					from: 'likes',
-					localField: '_id',
-					foreignField: 'postId',
-					as: 'likes',
+	const post = await Post.aggregate([
+		{ $match: { _id: new mongoose.Types.ObjectId(id) } },
+		{
+			$lookup: {
+				from: 'likes',
+				localField: '_id',
+				foreignField: 'postId',
+				as: 'likes',
+			},
+		},
+		{
+			$lookup: {
+				from: 'users',
+				localField: 'author',
+				foreignField: '_id',
+				as: 'authorDetails',
+			},
+		},
+		{
+			$addFields: {
+				likeCount: { $size: '$likes' },
+				isLikedByUser: {
+					$in: [
+						new mongoose.Types.ObjectId(currentUserId),
+						'$likes.userId',
+					],
+				},
+				authorUsername: {
+					$arrayElemAt: ['$authorDetails.username', 0],
 				},
 			},
-			{
-				$lookup: {
-					from: 'users',
-					localField: 'author',
-					foreignField: '_id',
-					as: 'authorDetails',
-				},
+		},
+		{
+			$project: {
+				likes: 0,
+				authorDetails: 0,
 			},
-			{
-				$addFields: {
-					likeCount: { $size: '$likes' },
-					isLikedByUser: {
-						$in: [
-							new mongoose.Types.ObjectId(currentUserId),
-							'$likes.userId',
-						],
-					},
-					authorUsername: {
-						$arrayElemAt: ['$authorDetails.username', 0],
-					},
-				},
-			},
-			{
-				$project: {
-					likes: 0,
-					authorDetails: 0,
-				},
-			},
-		]);
+		},
+	]);
+	const detailedPost = post[0];
 
-		if (!post || post.length === 0) {
-			throw new NotFoundError('게시글이 존재하지 않습니다.');
-		}
-		// const result: PostDetailed = transformUserById(post[0]);
-		const detailedPost = post[0];
-		return {
-			id: detailedPost._id.toString(),
-			title: detailedPost.title,
-			contents: detailedPost.contents,
-			author: detailedPost.authorUsername,
-			likeCount: detailedPost.likeCount,
-			isLikedByUser: detailedPost.isLikedByUser,
-			createdAt: detailedPost.createdAt,
-			updatedAt: detailedPost.updatedAt,
-		};
-	} catch (error: any) {
-		throw new Error(error.message || '게시글 불러오기에 실패했습니다.');
+	if (!detailedPost) {
+		throw new NotFoundError('게시글이 존재하지 않습니다.');
 	}
+	return {
+		id: detailedPost._id.toString(),
+		title: detailedPost.title,
+		contents: detailedPost.contents,
+		author: detailedPost.authorUsername,
+		likeCount: detailedPost.likeCount,
+		isLikedByUser: detailedPost.isLikedByUser,
+		createdAt: detailedPost.createdAt,
+		updatedAt: detailedPost.updatedAt,
+	};
 };
 
 export interface GetAllPosts extends PostInterface {
@@ -239,6 +234,10 @@ export const deletePostMoel = async (
 	authorId: string
 ): Promise<void> => {
 	const session = await mongoose.startSession();
+	if (!session) {
+		throw new Error('트랜잭션 세션을 시작할 수 없습니다.');
+	}
+
 	session.startTransaction();
 
 	try {
@@ -263,8 +262,6 @@ export const deletePostMoel = async (
 		// 연관된 좋아요 삭제
 		await likeModel.deleteMany({ postId: id }).session(session).exec();
 		const like = await likeModel.find({});
-
-		console.log({ like }, { comment });
 
 		// 트랜잭션 커밋
 		await session.commitTransaction();
