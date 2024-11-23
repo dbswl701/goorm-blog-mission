@@ -7,6 +7,9 @@ import { GetPostsParams } from '../../services/post';
 import { buildSearchCondition } from '../../utils/search';
 import { BadRequestError } from '../../errors/BadRequestError';
 import { buildSortCondition } from '../../utils/sort';
+import { PermissionError } from '../../errors/PermissionError';
+import commentModel from '../comment/schema';
+import likeModel from '../like/schema';
 
 export const transformUserWithPopulate = (post: any): PostDetailed => {
 	const { _id, author, ...rest } = post;
@@ -235,19 +238,41 @@ export const deletePostMoel = async (
 	id: string,
 	authorId: string
 ): Promise<void> => {
-	// 게시글 찾기
-	const post = await Post.findById(id).exec();
-	if (!post) {
-		throw new Error('게시글을 찾을 수 없습니다.');
-	}
+	const session = await mongoose.startSession();
+	session.startTransaction();
 
-	// 작성자 확인
-	if (post.author.toString() !== authorId) {
-		throw new Error('삭제 권한이 없습니다.');
-	}
+	try {
+		// 게시글 찾기
+		const post = await Post.findById(id).session(session).exec();
+		if (!post) {
+			throw new NotFoundError('게시글을 찾을 수 없습니다.');
+		}
 
-	// 게시글 삭제
-	await Post.findByIdAndDelete(id).exec();
+		// 작성자 확인
+		if (post.author.toString() !== authorId) {
+			throw new PermissionError('삭제 권한이 없습니다.');
+		}
+
+		// 게시글 삭제
+		await Post.findByIdAndDelete(id).session(session).exec();
+
+		// 연관된 댓글 삭제
+		await commentModel.deleteMany({ postId: id }).session(session).exec();
+		const comment = await commentModel.find({}).exec();
+
+		// 연관된 좋아요 삭제
+		await likeModel.deleteMany({ postId: id }).session(session).exec();
+		const like = await likeModel.find({});
+
+		console.log({ like }, { comment });
+
+		// 트랜잭션 커밋
+		await session.commitTransaction();
+	} catch (error) {
+		// 트랜잭션 롤백
+		await session.abortTransaction();
+		throw error;
+	}
 };
 
 // 게시글 존재 여부 확인
