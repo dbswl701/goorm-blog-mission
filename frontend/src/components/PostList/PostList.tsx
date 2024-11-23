@@ -11,6 +11,9 @@ export interface Post {
 	createdAt: string;
 	contents: string;
 	author: string;
+	isLikedByUser: boolean;
+	likeCount: number;
+	commentCount?: number;
 }
 
 const PostList = () => {

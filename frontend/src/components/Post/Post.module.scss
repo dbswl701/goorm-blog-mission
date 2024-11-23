@@ -1,0 +1,19 @@
+.Post {
+	&__like {
+		display: flex;
+		border: 1px solid #dee2e6;
+		justify-content: center;
+		align-items: center;
+		padding: 4px 8px;
+		gap: 0.5rem;
+		border-radius: 50rem;
+		cursor: pointer;
+
+		&:hover {
+			background-color: var(--color-button-hover);
+		}
+		& > small {
+			color: #868e96;
+		}
+	}
+}

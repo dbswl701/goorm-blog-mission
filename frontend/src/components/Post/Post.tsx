@@ -1,9 +1,13 @@
 import { PostInterface } from '@type/post';
 import MDEditor from '@uiw/react-md-editor';
+import { FaHeart, FaRegHeart } from 'react-icons/fa';
 import { useNavigate } from 'react-router-dom';
 import remarkBreaks from 'remark-breaks';
 import styled from 'styled-components';
 import { formatDate } from 'utils/formatDate';
+import styles from './Post.module.scss';
+import { useState } from 'react';
+import { useLikePost } from '@hooks/usePostLike';
 
 const StyledEditor = styled(MDEditor)`
 	margin-top: 16px;
@@ -30,6 +34,8 @@ const ActionButton = styled.button`
 
 interface IProps extends PostInterface {
 	handleDeleteClick: () => void;
+	likeCount: number;
+	isLikedByUser: boolean;
 }
 
 const Post = ({
@@ -38,18 +44,62 @@ const Post = ({
 	contents,
 	author,
 	createdAt,
+	likeCount,
+	isLikedByUser,
 	handleDeleteClick,
 }: IProps) => {
 	const navigate = useNavigate();
+	const [isLiked, setIsLiked] = useState(isLikedByUser);
+	const [localLikeCount, setLocalLikeCount] = useState(likeCount);
+
+	const { mutate } = useLikePost();
+
+	const handleLikeClick = () => {
+		setIsLiked((prev) => !prev);
+		setLocalLikeCount((prev) => (isLiked ? prev - 1 : prev + 1));
+
+		mutate(
+			{ postId: id, isLiked },
+			{
+				onError: () => {
+					// 롤백
+					setIsLiked((prev) => !prev);
+					setLocalLikeCount((prev) =>
+						isLiked ? prev + 1 : prev - 1
+					);
+				},
+			}
+		);
+	};
+
 	return (
 		<section className="p-4">
 			<div className="d-flex w-100 align-items-baseline gap-2 flex-column">
 				<h2 className="mb-1">{title}</h2>
 				<div className="d-flex justify-content-between w-100">
-					<div className="d-flex gap-2">
+					<div className="d-flex gap-2 align-items-center">
 						<small className="fw-bold">{author}</small>
 						{'·'}
 						<small>{formatDate(createdAt)}</small>
+						<div
+							className={styles.Post__like}
+							onClick={handleLikeClick}
+						>
+							{isLiked ? (
+								<FaHeart
+									style={{
+										color: 'red',
+										width: '14px',
+										height: '14px',
+									}}
+								/>
+							) : (
+								<FaRegHeart
+									style={{ width: '14px', height: '14px' }}
+								/>
+							)}
+							<small>{localLikeCount}</small>
+						</div>
 					</div>
 					<div className="d-flex gap-2">
 						<ActionButton

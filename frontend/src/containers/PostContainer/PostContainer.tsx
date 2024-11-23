@@ -3,7 +3,6 @@ import Post from '@components/Post';
 import { useGetPost } from '@hooks/useGetPost';
 import { useState } from 'react';
 import { useDeletePost } from '@hooks/useDeletePost';
-import { useParams } from 'react-router-dom';
 
 interface PostContainernterface {
 	id: string;
@@ -39,6 +38,8 @@ const PostContainer = ({ id }: PostContainernterface) => {
 					author={data.author}
 					createdAt={data.createdAt}
 					id={data.id}
+					likeCount={data.likeCount}
+					isLikedByUser={data.isLikedByUser}
 					handleDeleteClick={handleDeleteClick}
 				/>
 			)}

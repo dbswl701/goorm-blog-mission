@@ -20,6 +20,7 @@
 	--color-background: #fafafa; /* 배경 */
 	--color-text: #212121; /* 기본 텍스트 */
 	--color-accent: #ff5722; /* 강조 */
+	--color-button-hover: #eeeeee; /* 버튼 호버 */
 
 	/* --wp--preset--aspect-ratio--square: 1;
     --wp--preset--aspect-ratio--4-3: 4 / 3;

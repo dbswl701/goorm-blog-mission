@@ -15,5 +15,11 @@ export interface ErrorResponse {
 	success: boolean;
 	message: string;
 }
+export interface SuccessResponse {
+	success: boolean;
+	data: any;
+}
 
 export interface DeletePostResposne extends ErrorResponse {}
+
+export interface LikeErrorResponse extends ErrorResponse {}
