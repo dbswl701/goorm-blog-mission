@@ -121,8 +121,16 @@ export const getAllPosts = async ({
 	}
 
 	// Aggregation Pipeline
-	const posts = await Post.aggregate([
+	const rawPosts = await Post.aggregate([
 		{ $match: searchCondition }, // 검색 조건 적용
+		{
+			$lookup: {
+				from: 'users', // Like 모델 조인
+				localField: 'author',
+				foreignField: '_id',
+				as: 'authorDetail',
+			},
+		},
 		{
 			$lookup: {
 				from: 'likes', // Like 모델 조인
@@ -155,6 +163,17 @@ export const getAllPosts = async ({
 			},
 		},
 	]);
+
+	const posts = rawPosts.map((post) => ({
+		id: post._id.toString(), // _id를 id로 변환
+		title: post.title,
+		contents: post.contents,
+		author: post.authorDetail[0].username,
+		likeCount: post.likeCount || 0,
+		commentCount: post.commentCount || 0,
+		createdAt: post.createdAt,
+		updatedAt: post.updatedAt,
+	}));
 
 	return { posts, total };
 };
