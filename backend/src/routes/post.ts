@@ -128,7 +128,13 @@ router.get(
 			}
 
 			// 정렬 옵션 유효성 검사
-			const validSortOptions = ['likes', 'comments', 'latest'];
+			const validSortOptions = [
+				'likes',
+				'unlikes',
+				'comments',
+				'latest',
+				'oldest',
+			];
 			if (!validSortOptions.includes(sort as string)) {
 				throw new BadRequestError('유효하지 않은 정렬 옵션입니다.');
 			}

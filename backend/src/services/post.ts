@@ -1,3 +1,4 @@
+import { BadRequestError } from '../errors/BadRequestError';
 import {
 	getPostById,
 	getAllPosts,
@@ -86,21 +87,17 @@ export const getPosts = async ({
 	search,
 	searchBy,
 }: GetPostsParams): Promise<{ posts: GetAllPosts[]; total: number }> => {
-	try {
-		const { posts, total } = await getAllPosts({
-			page,
-			limit,
-			sort,
-			search,
-			searchBy,
-		});
+	const { posts, total } = await getAllPosts({
+		page,
+		limit,
+		sort,
+		search,
+		searchBy,
+	});
 
-		if (!posts) {
-			throw new Error('Not found posts');
-		}
-
-		return { posts, total };
-	} catch (error: any) {
-		throw new Error(error.message || 'Failed to fetch post');
+	if (!posts) {
+		throw new Error('Not found posts');
 	}
+
+	return { posts, total };
 };

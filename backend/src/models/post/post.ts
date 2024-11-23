@@ -5,8 +5,8 @@ import { NotFoundError } from '../../errors/NotFoundError';
 import postModel from './schema';
 import { GetPostsParams } from '../../services/post';
 import { buildSearchCondition } from '../../utils/search';
-import likeModel from '../like/schema';
-import commentModel from '../comment/schema';
+import { BadRequestError } from '../../errors/BadRequestError';
+import { buildSortCondition } from '../../utils/sort';
 
 export const transformUserWithPopulate = (post: any): PostDetailed => {
 	const { _id, author, ...rest } = post;
@@ -105,54 +105,58 @@ export const getAllPosts = async ({
 	// 검색 조건 생성
 	const searchCondition = buildSearchCondition(search, searchBy);
 
-	// 정렬 조건 생성
-	let sortCondition: any = {};
-	switch (sort) {
-		case 'likes':
-			sortCondition = { likeCount: -1 };
-			break;
-		case 'comments':
-			sortCondition = { commentCount: -1 };
-			break;
-		case 'latest':
-		default:
-			sortCondition = { createdAt: -1 };
-			break;
-	}
+	const sortCondition = buildSortCondition(sort);
 
 	// 검색 결과 총 개수 계산
 	const total = await Post.countDocuments(searchCondition);
 
-	// 페이지네이션된 게시글 조회
-	const query = Post.find(searchCondition)
-		.sort(sortCondition)
-		.skip(skip)
-		.limit(limit)
-		.populate('author', 'username') // 작성자의 username만 가져오기
-		.lean(); // Mongoose Document 대신 일반 JS 객체 반환
-	const posts = await query.exec();
-
-	// 좋아요 개수 및 댓글 개수 추가
-	const result: GetAllPosts[] = [];
-	for (const post of posts) {
-		const likeCount = await likeModel.countDocuments({ postId: post._id });
-		const commentCount = await commentModel.countDocuments({
-			postId: post._id,
-		});
-
-		result.push({
-			id: post._id.toString(),
-			title: post.title,
-			contents: post.contents,
-			author: (post.author as any).username,
-			likeCount,
-			commentCount,
-			createdAt: post.createdAt,
-			updatedAt: post.updatedAt,
-		});
+	// page 유효성 검사
+	if (Math.ceil(total / limit) < page) {
+		throw new BadRequestError(`유효하지 않은 page 번호 입니다.`);
 	}
 
-	return { posts: result, total };
+	// limit 유효성 검사
+	if (total < limit) {
+		throw new BadRequestError(`유효하지 않은 limit 입니다.`);
+	}
+
+	// Aggregation Pipeline
+	const posts = await Post.aggregate([
+		{ $match: searchCondition }, // 검색 조건 적용
+		{
+			$lookup: {
+				from: 'likes', // Like 모델 조인
+				localField: '_id',
+				foreignField: 'postId',
+				as: 'likes',
+			},
+		},
+		{
+			$lookup: {
+				from: 'comments', // Comment 모델 조인
+				localField: '_id',
+				foreignField: 'postId',
+				as: 'comments',
+			},
+		},
+		{
+			$addFields: {
+				likeCount: { $size: '$likes' },
+				commentCount: { $size: '$comments' },
+			},
+		},
+		{ $sort: sortCondition }, // 정렬 조건 적용
+		{ $skip: skip }, // 페이지네이션
+		{ $limit: limit },
+		{
+			$project: {
+				likes: 0,
+				comments: 0,
+			},
+		},
+	]);
+
+	return { posts, total };
 };
 
 // 총 게시글 수를 가져오는 함수 추가
