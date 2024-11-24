@@ -11,10 +11,12 @@ export const getPostList = async ({
 	pageParam,
 	search,
 	sort,
+	filter,
 }: {
 	pageParam: number | unknown;
 	search: string;
 	sort: string;
+	filter: string;
 }): Promise<PostsResponse> => {
 	let res;
 	try {
@@ -24,6 +26,7 @@ export const getPostList = async ({
 		};
 		if (search) params.search = search;
 		if (sort) params.sort = sort;
+		if (filter) params.searchBy = filter;
 
 		res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/posts`, {
 			params,

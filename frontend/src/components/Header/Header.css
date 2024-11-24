@@ -42,7 +42,7 @@
 	top: 56px;
 	width: 100%;
 	max-height: 0;
-	overflow: hidden;
+	/* overflow: hidden; */
 	transition: max-height 0.3s ease-in-out; /* 없어지는것도 넣기 */
 }
 
@@ -56,10 +56,16 @@
 	padding: 10px 20px;
 	border-bottom: 1px solid #e0e0e0;
 }
+.fixed-dropdown-button {
+	width: 100px;
+}
 
 .search-bar form {
 	display: flex;
+	margin-bottom: 1rem;
+
 	align-items: center;
+	justify-content: center;
 }
 
 .search-bar input {
@@ -69,7 +75,7 @@
 	border-radius: 4px;
 }
 
-.search-bar button {
+.search-button {
 	margin-left: 10px;
 	padding: 8px 16px;
 	background-color: #28a745;
@@ -77,9 +83,10 @@
 	border-radius: 4px;
 	color: #fff;
 	cursor: pointer;
+	width: 100px;
 }
 
-.search-bar button:hover {
+.search-button:hover {
 	background-color: #218838;
 }
 

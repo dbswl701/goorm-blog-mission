@@ -6,6 +6,7 @@ export const useGetPostList = () => {
 	const [searchParams] = useSearchParams();
 	const searchTerm = searchParams.get('search') || '';
 	const sortOption = searchParams.get('sort') || '';
+	const filterOption = searchParams.get('filter') || 'all';
 	const {
 		data,
 		isLoading,
@@ -22,6 +23,7 @@ export const useGetPostList = () => {
 				pageParam,
 				search: searchTerm,
 				sort: sortOption,
+				filter: filterOption,
 			});
 		},
 		getNextPageParam: (lastPage) => {
