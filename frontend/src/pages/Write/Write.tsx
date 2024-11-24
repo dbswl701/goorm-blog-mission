@@ -9,9 +9,27 @@ import { useGetPost } from '@hooks/useGetPost';
 import { usePostCreatePost } from '@hooks/usePostCreatePost';
 import { usePutPost } from '@hooks/usePutPost';
 import remarkBreaks from 'remark-breaks';
+import styled from 'styled-components';
 
 const MAX_TITLE_LENGTH = 50;
 const MAX_CONTENT_LENGTH = 5000;
+
+const StyledEditor = styled(MDEditor)`
+	margin-top: 16px;
+	background-color: #ffffff !important; /* 흰색 배경 */
+	color: var(--color-fg-default); /* 텍스트 색상 */
+	flex: 1;
+
+	.w-md-editor-toolbar {
+		background-color: #ffffff !important; /* 툴바 배경 */
+		color: black !important;
+	}
+
+	.w-md-editor-preview > .wmde-markdown {
+		background-color: #ffffff;
+		color: black;
+	}
+`;
 
 const Write = () => {
 	const [title, setTitle] = useState('');
@@ -127,7 +145,7 @@ const Write = () => {
 						</p>
 					)}
 				</div>
-				<MDEditor
+				<StyledEditor
 					className={styles.Write__editor}
 					aria-describedby="contents-warning"
 					value={contents}

@@ -1,14 +1,6 @@
-// .Layout {
-// 	&__main {
-// 		padding-top: 56px;
-// 		min-height: 100vh;
-
-// 		// margin: 0 250px;
-// 	}
-// }
-
 .Layout {
 	&__main {
+		padding: 16px;
 		padding-top: 56px;
 		min-height: 100vh;
 		width: 100%; /* 기본 값: 화면 크기에 따라 동적 조정 */
