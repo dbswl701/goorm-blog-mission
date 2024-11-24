@@ -15,11 +15,25 @@ export interface ErrorResponse {
 	success: boolean;
 	message: string;
 }
-export interface SuccessResponse {
+export interface Response<T> {
 	success: boolean;
-	data: any;
+	data?: T;
+	message?: string;
 }
 
 export interface DeletePostResposne extends ErrorResponse {}
 
 export interface LikeErrorResponse extends ErrorResponse {}
+
+export interface IComment {
+	id: string;
+	postId: string;
+	author: string;
+	content: string;
+	createdAt: string;
+	updatedAt: string;
+}
+
+export interface IBaseResponse {
+	data: string;
+}

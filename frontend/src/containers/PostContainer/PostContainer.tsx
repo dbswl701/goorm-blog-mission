@@ -3,6 +3,7 @@ import Post from '@components/Post';
 import { useGetPost } from '@hooks/useGetPost';
 import { useState } from 'react';
 import { useDeletePost } from '@hooks/useDeletePost';
+import Comment from '@components/Comment';
 
 interface PostContainernterface {
 	id: string;
@@ -43,6 +44,7 @@ const PostContainer = ({ id }: PostContainernterface) => {
 					handleDeleteClick={handleDeleteClick}
 				/>
 			)}
+			<Comment postId={id} />
 			<ConfirmModal
 				isOpen={isModalOpen}
 				message="게시글을 삭제하시겠습니까?"

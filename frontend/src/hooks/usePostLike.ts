@@ -1,5 +1,6 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postLike } from 'apis/postLike';
+import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
 
 export const useLikePost = () => {
@@ -40,13 +41,15 @@ export const useLikePost = () => {
 					context.previousPost
 				);
 			}
+			const errorResponse = (error as AxiosError<{ message: string }>)
+				.response;
 
-			toast.error(error.message, {
+			toast.error(errorResponse?.data.message, {
 				position: 'top-right',
 			});
 		},
 		onSettled: (data, error, { postId }) => {
-			console.log('data', data);
+			console.log('data', data, 'error: ', error);
 			queryClient.invalidateQueries({ queryKey: ['post', postId] });
 		},
 	});

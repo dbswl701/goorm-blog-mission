@@ -10,6 +10,7 @@
 		"format:be": "prettier ./backend --write",
 		"format": "npm run format:fe && npm run format:be",
 		"start:db": "mongod",
+		"start:db-replica": "mongod --replSet rs0 --bind_ip_all --port 27017 --dbpath /data/db",
 		"start:dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
 		"start:prod": "concurrently \"cd backend && npm run build && npm start\" \"cd frontend && npm run build && npm run preview\""
 	},
