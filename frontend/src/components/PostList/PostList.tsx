@@ -29,7 +29,7 @@ const PostList = () => {
 
 	if (isLoading) return <div>로딩중</div>;
 	if (error) return <div>에러</div>;
-	console.log('posts: ', posts);
+	console.log('posts: ', posts, 'hasNextPage: ', hasNextPage);
 	return (
 		<div>
 			<ul className="list-group list-group-flush py-4">

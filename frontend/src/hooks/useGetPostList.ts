@@ -15,8 +15,7 @@ export const useGetPostList = () => {
 		queryFn: ({ pageParam = 1 }) => getPostList({ pageParam }),
 		getNextPageParam: (lastPage) => {
 			const nextPage = lastPage.page + 1;
-			const totalPages = Math.ceil(lastPage.total / lastPage.limit);
-			return nextPage <= totalPages ? nextPage : undefined;
+			return nextPage <= lastPage.totalPage ? nextPage : undefined;
 		},
 		initialPageParam: 1,
 	});
