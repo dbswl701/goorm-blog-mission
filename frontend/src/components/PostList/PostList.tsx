@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import PostItem from '@components/PostListItem';
 import { useGetPostList } from '@hooks/useGetPostList';
 import ScrollToTopButton from '@components/ScrollToTopButton';
+import { useLocation } from 'react-router-dom';
 
 export interface Post {
 	id: string;
@@ -25,7 +26,14 @@ const PostList = () => {
 		fetchNextPage,
 		hasNextPage,
 		isFetchingNextPage,
+		refetch,
 	} = useGetPostList();
+
+	const location = useLocation();
+
+	useEffect(() => {
+		refetch();
+	}, [location.search]);
 
 	if (isLoading) return <div>로딩중</div>;
 	if (error) return <div>에러</div>;

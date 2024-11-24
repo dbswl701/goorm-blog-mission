@@ -109,14 +109,14 @@ export const getAllPosts = async ({
 	const total = await Post.countDocuments(searchCondition);
 
 	// page 유효성 검사
-	if (Math.ceil(total / limit) < page) {
-		throw new BadRequestError(`유효하지 않은 page 번호 입니다.`);
-	}
+	// if (Math.ceil(total / limit) < page) {
+	// 	throw new BadRequestError(`유효하지 않은 page 번호 입니다.`);
+	// }
 
-	// limit 유효성 검사
-	if (total < limit) {
-		throw new BadRequestError(`유효하지 않은 limit 입니다.`);
-	}
+	// // limit 유효성 검사
+	// if (total < limit) {
+	// 	throw new BadRequestError(`유효하지 않은 limit 입니다.`);
+	// }
 
 	// Aggregation Pipeline
 	const rawPosts = await Post.aggregate([

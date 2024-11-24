@@ -9,14 +9,22 @@ export interface PostsResponse {
 }
 export const getPostList = async ({
 	pageParam,
+	search,
 }: {
 	pageParam: number | unknown;
+	search: string;
 }): Promise<PostsResponse> => {
 	let res;
 	try {
-		res = await axios.get(
-			`${import.meta.env.VITE_SERVER_URL}/posts?page=${pageParam}&limit=10`
-		);
+		const params: any = {
+			page: pageParam,
+			limit: 10,
+		};
+		if (search) params.search = search;
+
+		res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/posts`, {
+			params,
+		});
 		return res.data as PostsResponse;
 	} catch (error) {
 		console.error('Error fetching data: ', error);
