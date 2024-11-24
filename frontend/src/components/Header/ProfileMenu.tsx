@@ -1,4 +1,4 @@
-import './Header.css';
+import styles from './ProfileMenu.module.scss';
 
 interface IProps {
 	onClose: () => void;
@@ -8,18 +8,14 @@ interface IProps {
 
 const ProfileMenu = ({ onClose, username, onLogout }: IProps) => {
 	return (
-		<div className="profile-menu">
-			<div className="profile-menu-header">
+		<div className={styles.profileMenu}>
+			<div className={styles.profileMenuHeader}>
 				<span>{username}</span>
-				<button onClick={onClose}>x</button>
+				<button onClick={onClose} aria-label="닫기">
+					x
+				</button>
 			</div>
 			<ul>
-				<li>
-					<a href="/lian">내 블로그</a>
-				</li>
-				<li>
-					<a href="/write">새 글 작성</a>
-				</li>
 				<li>
 					<span onClick={onLogout}>로그아웃</span>
 				</li>

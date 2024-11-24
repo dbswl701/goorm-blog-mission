@@ -1,0 +1,74 @@
+.profileMenu {
+	position: absolute;
+	top: 100%; /* 헤더 아래로 */
+	right: 0px; /* 오른쪽 정렬 */
+	width: 200px;
+	background-color: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 8px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 1000;
+
+	@media (min-width: 768px) {
+		right: 200px; /* 오른쪽 정렬 */
+	}
+
+	animation: fadeIn 0.3s ease-in-out;
+
+	@keyframes fadeIn {
+		from {
+			opacity: 0;
+			transform: translateY(-10px);
+		}
+		to {
+			opacity: 1;
+			transform: translateY(0);
+		}
+	}
+
+	ul {
+		list-style: none;
+		padding: 0;
+		margin: 0;
+	}
+
+	li {
+		border-bottom: 1px solid #f1f1f1;
+
+		&:last-child {
+			border-bottom: none;
+		}
+
+		span {
+			display: block;
+			padding: 10px 15px;
+			cursor: pointer;
+			color: #333;
+
+			&:hover {
+				background-color: #f1f1f1;
+			}
+		}
+	}
+}
+
+.profileMenuHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 15px;
+	border-bottom: 1px solid #f1f1f1;
+	font-weight: bold;
+
+	button {
+		background: none;
+		border: none;
+		font-size: 16px;
+		cursor: pointer;
+		color: #333;
+
+		&:hover {
+			color: #000;
+		}
+	}
+}

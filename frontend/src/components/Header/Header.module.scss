@@ -44,6 +44,8 @@
 		gap: 15px;
 
 		.iconButton {
+			position: relative; /* 프로필 메뉴 위치를 기준으로 설정 */
+
 			background: none;
 			border: none;
 			font-size: 20px;
