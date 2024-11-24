@@ -18,6 +18,7 @@ interface IProps {
 	likeCount: number;
 	isLikedByUser: boolean;
 	handleDeleteClick: () => void;
+	username: string;
 }
 
 const StyledEditor = styled(MDEditor)`
@@ -45,6 +46,7 @@ const Post = ({
 	likeCount,
 	isLikedByUser,
 	handleDeleteClick,
+	username,
 }: IProps) => {
 	const navigate = useNavigate();
 	const [isLiked, setIsLiked] = useState(isLikedByUser);
@@ -98,22 +100,24 @@ const Post = ({
 							<small>{localLikeCount}</small>
 						</div>
 					</div>
-					<div className="d-flex gap-2">
-						<button
-							onClick={() => navigate(`/write?id=${id}`)}
-							className={styles.Post__actionButton}
-							aria-label="게시글 수정하기"
-						>
-							수정
-						</button>
-						<button
-							onClick={handleDeleteClick}
-							className={styles.Post__actionButton}
-							aria-label="게시글 삭제하기"
-						>
-							삭제
-						</button>
-					</div>
+					{username === author && (
+						<div className="d-flex gap-2">
+							<button
+								onClick={() => navigate(`/write?id=${id}`)}
+								className={styles.Post__actionButton}
+								aria-label="게시글 수정하기"
+							>
+								수정
+							</button>
+							<button
+								onClick={handleDeleteClick}
+								className={styles.Post__actionButton}
+								aria-label="게시글 삭제하기"
+							>
+								삭제
+							</button>
+						</div>
+					)}
 				</div>
 			</div>
 

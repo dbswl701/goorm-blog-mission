@@ -1,4 +1,5 @@
 import Post from '@components/Post';
+import useAuth from '@hooks/useAuth';
 import { useGetPost } from '@hooks/useGetPost';
 interface PostContainernterface {
 	id: string;
@@ -7,7 +8,11 @@ interface PostContainernterface {
 
 const PostContainer = ({ id, handleDeleteClick }: PostContainernterface) => {
 	const { data, isLoading, error } = useGetPost(id);
-
+	const username = useAuth();
+	if (username === '') {
+		location.href = '/login';
+		return;
+	}
 	return (
 		<>
 			{data && (
@@ -20,6 +25,7 @@ const PostContainer = ({ id, handleDeleteClick }: PostContainernterface) => {
 					likeCount={data.likeCount}
 					isLikedByUser={data.isLikedByUser}
 					handleDeleteClick={handleDeleteClick}
+					username={username!}
 				/>
 			)}
 		</>
