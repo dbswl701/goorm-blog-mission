@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import './Header.css';
 import { useSearchParams } from 'react-router-dom';
+import AutoComplete from '@components/AutoComplete';
 
 const SearchBar = () => {
 	const [search, setSearch] = useState('');
@@ -76,6 +77,7 @@ const SearchBar = () => {
 					검색
 				</button>
 			</form>
+			<AutoComplete value={search} onChange={setSearch} />
 		</div>
 	);
 };
