@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import styles from './SearchBar.module.scss';
 import { useSearchParams } from 'react-router-dom';
 import AutoComplete from '@components/AutoComplete';
-
+import './Header.css';
 const SearchBar = () => {
 	const [search, setSearch] = useState('');
 	const [filter, setFilter] = useState('all');
