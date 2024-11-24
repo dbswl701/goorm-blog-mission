@@ -1,6 +1,5 @@
-// src/components/Autocomplete.tsx
 import React, { useState, useEffect } from 'react';
-import './AutoComplete.css'; // 스타일링을 위한 CSS 파일
+import styles from './AutoComplete.module.scss';
 import { useGetAutoComplete } from '@hooks/useGetAutoComplete';
 import useDebounce from '@hooks/useDebounce';
 
@@ -10,30 +9,44 @@ interface AutocompleteProps {
 }
 
 const AutoComplete: React.FC<AutocompleteProps> = ({ value, onChange }) => {
-	// const [suggestions, setSuggestions] = useState<string[]>([]);
-	const debounceSeachValue = useDebounce<string>(value);
+	const debounceSearchValue = useDebounce<string>(value);
+	const { data: suggestions, isLoading } =
+		useGetAutoComplete(debounceSearchValue);
+	const [activeIndex, setActiveIndex] = useState<number>(-1);
 
-	const {
-		data: suggestions,
-		isLoading,
-		error,
-	} = useGetAutoComplete(debounceSeachValue);
-
-	// const suggestions = ['테스트1', '테스트2', '테스트3'];
+	// 항목 클릭 핸들러
 	const handleSuggestionClick = (suggestion: string) => {
 		onChange(suggestion);
 	};
 
-	console.log('suggest:', suggestions);
+	// 키보드 이벤트 핸들러
+	const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+		if (!suggestions) return;
+
+		if (e.key === 'ArrowDown') {
+			setActiveIndex((prevIndex) =>
+				prevIndex < suggestions.length - 1 ? prevIndex + 1 : 0
+			);
+		} else if (e.key === 'ArrowUp') {
+			setActiveIndex((prevIndex) =>
+				prevIndex > 0 ? prevIndex - 1 : suggestions.length - 1
+			);
+		} else if (e.key === 'Enter' && activeIndex >= 0) {
+			onChange(suggestions[activeIndex]);
+		}
+	};
 
 	return (
-		<div className="autocomplete">
-			{suggestions && suggestions.length > 0 && (
-				<ul className="suggestions-list">
-					{suggestions.map((suggestion: string, index: number) => (
+		<div className={styles.autocomplete}>
+			{!isLoading && suggestions && suggestions.length > 0 && (
+				<ul className={styles.suggestionsList}>
+					{suggestions.map((suggestion, index) => (
 						<li
 							key={index}
 							onClick={() => handleSuggestionClick(suggestion)}
+							className={`${styles.suggestionItem} ${
+								index === activeIndex ? styles.active : ''
+							}`}
 						>
 							{suggestion}
 						</li>

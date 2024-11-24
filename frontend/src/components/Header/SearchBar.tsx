@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import './Header.css';
+import styles from './SearchBar.module.scss';
 import { useSearchParams } from 'react-router-dom';
 import AutoComplete from '@components/AutoComplete';
 
@@ -9,7 +9,7 @@ const SearchBar = () => {
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	const filterList = [
-		{ label: '전체', value: 'all' },
+		{ label: '제목+내용', value: 'all' },
 		{ label: '제목', value: 'title' },
 		{ label: '내용', value: 'contents' },
 		{ label: '작성자', value: 'author' },
@@ -26,13 +26,10 @@ const SearchBar = () => {
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		// 현재 쿼리 파라미터를 복사
 		const newSearchParams = new URLSearchParams(searchParams);
-
-		newSearchParams.set('search', search.trim()); // search 파라미터 설정
+		newSearchParams.set('search', search.trim());
 		newSearchParams.set('filter', filter);
 
-		// 쿼리 파라미터 업데이트
 		setSearchParams(newSearchParams);
 	};
 
@@ -44,18 +41,18 @@ const SearchBar = () => {
 		filterList.find((item) => item.value === filter)?.label || '필터';
 
 	return (
-		<div className="search-bar">
-			<form onSubmit={handleSubmit}>
+		<div className={styles.container}>
+			<form className={styles.searchBar} onSubmit={handleSubmit}>
 				<div className="input-group">
 					<button
-						className="btn btn-outline-secondary dropdown-toggle fixed-dropdown-button"
+						className={`btn btn-outline-secondary dropdown-toggle ${styles.dropdownButton}`}
 						type="button"
 						data-bs-toggle="dropdown"
 						aria-expanded="false"
 					>
 						{selectedFilterLabel}
 					</button>
-					<ul className="dropdown-menu dropdown-menu-start">
+					<ul className={`dropdown-menu ${styles.dropdownMenu}`}>
 						{filterList.map((item) => (
 							<li
 								key={item.value}
@@ -65,6 +62,7 @@ const SearchBar = () => {
 							</li>
 						))}
 					</ul>
+
 					<input
 						type="text"
 						className="form-control"

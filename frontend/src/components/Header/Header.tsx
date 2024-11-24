@@ -91,6 +91,14 @@ const Header = () => {
 						</a>
 					)}
 				</div>
+				{/* 검색창 추가 */}
+				<div
+					className={`${styles.searchBarContainer} ${
+						isSearchOpen ? styles.open : ''
+					}`}
+				>
+					{isSearchOpen && <SearchBar />}
+				</div>
 			</nav>
 		</header>
 	);
