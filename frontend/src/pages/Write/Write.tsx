@@ -1,10 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import styles from './Write.module.scss';
-import MDEditor, { MDEditorProps } from '@uiw/react-md-editor';
+import MDEditor from '@uiw/react-md-editor';
 import { GrPrevious } from 'react-icons/gr';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { toast } from 'react-toastify';
-import useAuth from '@hooks/useAuth';
 import { useGetPost } from '@hooks/useGetPost';
 import { usePostCreatePost } from '@hooks/usePostCreatePost';
 import { usePutPost } from '@hooks/usePutPost';
@@ -31,7 +30,7 @@ const StyledEditor = styled(MDEditor)`
 	}
 `;
 
-const Write = () => {
+const Write = ({ username }: { username: string | null }) => {
 	const [title, setTitle] = useState('');
 	const [contents, setContents] = useState('');
 	const [isTitleOverLimit, setIsTitleOverLimit] = useState(false);
@@ -52,7 +51,7 @@ const Write = () => {
 		}
 	}, [data]);
 
-	const username = useAuth();
+	// const username = useAuth();
 	if (username === '') {
 		location.href = '/login';
 		return;

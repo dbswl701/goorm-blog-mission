@@ -1,4 +1,3 @@
-import useAuth from '@hooks/useAuth';
 import axios from 'axios';
 import { useState } from 'react';
 import { FaPlus, FaSearch, FaTimes, FaUserCircle } from 'react-icons/fa';
@@ -7,8 +6,8 @@ import SearchBar from './SearchBar';
 import { useNavigate } from 'react-router-dom';
 import styles from './Header.module.scss';
 
-const Header = () => {
-	const username = useAuth();
+const Header = ({ username }: { username: string | null }) => {
+	// const username = useAuth();
 	const navigate = useNavigate();
 	const [isSearchOpen, setIsSearchOpen] = useState(false);
 	const [isProfileMenuOpen, setIsProfileMenuOpen] = useState(false);

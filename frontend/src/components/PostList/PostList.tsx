@@ -24,7 +24,6 @@ const PostList = () => {
 	const {
 		data: posts,
 		isLoading,
-		isError,
 		error,
 		fetchNextPage,
 		hasNextPage,

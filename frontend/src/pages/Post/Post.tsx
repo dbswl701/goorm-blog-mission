@@ -1,14 +1,11 @@
 import { useParams } from 'react-router-dom';
-
-import useAuth from '@hooks/useAuth';
 import PostContainer from '@containers/PostContainer';
 import ConfirmModal from '@components/ConfirmModal';
 import Comment from '@components/Comment';
 import { useState } from 'react';
 import { useDeletePost } from '@hooks/useDeletePost';
 
-const Post = () => {
-	const username = useAuth();
+const Post = ({ username }: { username: string | null }) => {
 	if (username === '') {
 		location.href = '/login';
 		return;
