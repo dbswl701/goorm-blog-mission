@@ -10,6 +10,7 @@ import { buildSortCondition } from '../../utils/sort';
 import { PermissionError } from '../../errors/PermissionError';
 import commentModel from '../comment/schema';
 import likeModel from '../like/schema';
+import userModel from '../user/schema';
 
 export const transformUserWithPopulate = (post: any): PostDetailed => {
 	const { _id, author, ...rest } = post;
@@ -90,7 +91,6 @@ export interface GetAllPosts extends PostInterface {
 	commentCount: number;
 }
 
-// 실제 게시글을 데이터베이스에서 가져오는 함수 수정
 export const getAllPosts = async ({
 	page,
 	limit,
@@ -101,7 +101,20 @@ export const getAllPosts = async ({
 	const skip = (page - 1) * limit;
 
 	// 검색 조건 생성
-	const searchCondition = buildSearchCondition(search, searchBy);
+	let searchCondition = {};
+	if (search && searchBy === 'author') {
+		const user = await userModel.findOne({
+			username: { $regex: search, $options: 'i' },
+		});
+		if (user) {
+			searchCondition = { author: user._id }; // author 필드로 검색 조건 설정
+		} else {
+			// 검색 결과가 없을 경우 빈 결과 반환
+			return { posts: [], total: 0 };
+		}
+	} else {
+		searchCondition = buildSearchCondition(search, searchBy);
+	}
 
 	// 정렬 조건 생성
 	const sortCondition = buildSortCondition(sort);
@@ -114,7 +127,7 @@ export const getAllPosts = async ({
 		{ $match: searchCondition }, // 검색 조건 적용
 		{
 			$lookup: {
-				from: 'users', // Like 모델 조인
+				from: 'users', // User 모델 조인
 				localField: 'author',
 				foreignField: '_id',
 				as: 'authorDetail',

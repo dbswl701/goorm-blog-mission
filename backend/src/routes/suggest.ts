@@ -14,7 +14,6 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 		}
 
 		const suggestions = await getAutocompleteSuggestions(partial);
-		console.log('req:', req, 'partial: ', partial);
 		res.status(200).json({ suggestions });
 	} catch (error) {
 		next(error);
