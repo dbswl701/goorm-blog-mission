@@ -31,6 +31,8 @@ export const useGetPostList = () => {
 			return nextPage <= lastPage.totalPage ? nextPage : undefined;
 		},
 		initialPageParam: 1,
+		gcTime: 5 * 60 * 1000, // 캐시 데이터 유효 시간: 5분
+		staleTime: 1 * 60 * 1000, // 데이터 신선 상태 유지 시간: 1분
 	});
 
 	return {
