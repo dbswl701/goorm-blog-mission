@@ -1,3 +1,7 @@
+import { formatDate } from 'utils/formatDate';
+import styles from './PostListItem.module.scss';
+import { AiOutlineLike } from 'react-icons/ai';
+import { BiCommentDetail } from 'react-icons/bi';
 import { Link } from 'react-router-dom';
 
 interface PostListItemProps {
@@ -10,7 +14,7 @@ interface PostListItemProps {
 	commentCount: number;
 }
 
-const PostItem = ({
+const PostListItem = ({
 	id,
 	title,
 	createdAt,
@@ -18,25 +22,33 @@ const PostItem = ({
 	author,
 	likeCount,
 	commentCount,
-}: PostListItemProps) => (
-	<Link
-		to={`/posts/${id}`}
-		className="list-group-item list-group-item-action"
-		aria-current="true"
-	>
-		<div className="d-flex w-100 justify-content-between">
-			<h5 className="mb-1">{title}</h5>
-			<small>{new Date(createdAt).toLocaleDateString()}</small>
-		</div>
-		<p className="mb-1">{summary}</p>
-		<div className="d-flex justify-content-between align-items-center">
-			<small>by {author}</small>
-			<div>
-				<small>{likeCount} Likes</small>
-				<small>{commentCount} Comments</small>
+}: PostListItemProps) => {
+	return (
+		<Link
+			to={`/posts/${id}`}
+			className="list-group-item list-group-item-action"
+			aria-current="true"
+		>
+			<div className={styles.postHeader}>
+				<h5 id={`post-title-${id}`}>{title}</h5>
+				<small>{formatDate(createdAt)}</small>
 			</div>
-		</div>
-	</Link>
-);
+			<p id={`post-summary-${id}`} className={styles.postSummary}>
+				{summary.length > 100 ? `${summary.slice(0, 100)}...` : summary}
+			</p>
+			<div className={styles.postAuthorAndStats}>
+				<small className={styles.author}>by {author}</small>
+				<div className={styles.stats}>
+					<small>
+						<AiOutlineLike /> {likeCount}
+					</small>
+					<small>
+						<BiCommentDetail /> {commentCount}
+					</small>
+				</div>
+			</div>
+		</Link>
+	);
+};
 
-export default PostItem;
+export default PostListItem;

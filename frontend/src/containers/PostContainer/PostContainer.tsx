@@ -1,4 +1,5 @@
 import Post from '@components/Post';
+import PostSkeleton from '@components/Post/PostSkeleton';
 import useAuth from '@hooks/useAuth';
 import { useGetPost } from '@hooks/useGetPost';
 interface PostContainernterface {
@@ -12,6 +13,10 @@ const PostContainer = ({ id, handleDeleteClick }: PostContainernterface) => {
 	if (username === '') {
 		location.href = '/login';
 		return;
+	}
+
+	if (isLoading) {
+		return <PostSkeleton />;
 	}
 	return (
 		<>
