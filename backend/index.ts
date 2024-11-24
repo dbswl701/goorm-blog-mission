@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 
 import authRouter from './src/routes/auth';
 import postRouter from './src/routes/post';
+import suggestRouter from './src/routes/suggest';
 
 import { CorsConfigInterface } from './src/types';
 import { errorHandler } from './src/middleware/errorHandler';
@@ -35,7 +36,7 @@ app.use(sessionInstance);
 
 app.use('/auth', authRouter);
 app.use('/posts', postRouter);
-
+app.use('/suggest', suggestRouter);
 // 글로벌 에러 핸들러
 app.use(errorHandler);
 

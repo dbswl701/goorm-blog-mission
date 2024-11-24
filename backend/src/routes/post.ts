@@ -14,6 +14,7 @@ import { BadRequestError } from '../errors/BadRequestError';
 import { isValidString } from '../utils/validation';
 import { likePost, unLikePost } from '../services/like';
 import commentRouter from './comment'; // 댓글 라우터 임포트
+import { logSearchQuery } from '../services/searchQuery';
 
 const router = express.Router();
 
@@ -142,6 +143,9 @@ router.get('/', async (req: Request, res: Response, next: NextFunction) => {
 		if (!validSearchOptions.includes(searchBy as string)) {
 			throw new BadRequestError('유효하지 않은 검색 필터 옵션입니다.');
 		}
+
+		// 검색어 저장
+		await logSearchQuery(searchStr);
 
 		// 게시글 가져오기
 		const { posts, total } = await getPosts({
