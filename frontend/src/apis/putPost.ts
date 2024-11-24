@@ -7,13 +7,10 @@ export const putPost = async (
 	contents: string
 ): Promise<Post> => {
 	try {
-		const res = await axios.put(
-			`${import.meta.env.VITE_SERVER_URL}/posts/${id}`,
-			{
-				title,
-				contents,
-			}
-		);
+		const res = await axios.put(`/posts/${id}`, {
+			title,
+			contents,
+		});
 		return res.data as Post;
 	} catch (error) {
 		console.error('Error fetching data: ', error);

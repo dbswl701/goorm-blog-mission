@@ -28,7 +28,7 @@ export const getPostList = async ({
 		if (sort) params.sort = sort;
 		if (filter) params.searchBy = filter;
 
-		res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/posts`, {
+		res = await axios.get('/posts', {
 			params,
 		});
 		return res.data as PostsResponse;

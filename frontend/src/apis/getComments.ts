@@ -2,9 +2,7 @@ import axios from 'axios';
 import { IComment } from '@type/post';
 
 export const getComments = async (id: string): Promise<IComment[]> => {
-	const res = await axios.get(
-		`${import.meta.env.VITE_SERVER_URL}/posts/${id}/comments`
-	);
+	const res = await axios.get(`/posts/${id}/comments`);
 
 	if (!res.data.success) {
 		throw new Error(res.data.message || '댓글을 가져오는데 실패했습니다.');

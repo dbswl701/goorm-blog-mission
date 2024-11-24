@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 export const getAutoComplete = async (value: string): Promise<string[]> => {
-	const res = await axios.get(`${import.meta.env.VITE_SERVER_URL}/suggest`, {
+	const res = await axios.get('/suggest', {
 		params: { q: value },
 	});
 

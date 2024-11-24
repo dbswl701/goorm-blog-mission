@@ -7,7 +7,7 @@ export const postCreatePost = async (
 ): Promise<CreatePostResponse> => {
 	let res;
 	try {
-		res = await axios.post(`${import.meta.env.VITE_SERVER_URL}/posts`, {
+		res = await axios.post('/posts', {
 			title,
 			contents,
 		});

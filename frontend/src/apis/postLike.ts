@@ -5,14 +5,10 @@ export const postLike = async (
 	isLiked: boolean
 ): Promise<{ data: string }> => {
 	if (!isLiked) {
-		const res = await axios.post(
-			`${import.meta.env.VITE_SERVER_URL}/posts/${postId}/like`
-		);
+		const res = await axios.post(`/posts/${postId}/like`);
 		return res.data.data;
 	} else {
-		const res = await axios.post(
-			`${import.meta.env.VITE_SERVER_URL}/posts/${postId}/unlike`
-		);
+		const res = await axios.post(`/posts/${postId}/unlike`);
 		return res.data.data;
 	}
 };
