@@ -1,6 +1,6 @@
 import { Schema, model, Types, Document } from 'mongoose';
 
-interface PostSchema {
+export interface PostSchema {
 	title: string;
 	author: Types.ObjectId;
 	contents: string;
@@ -18,6 +18,9 @@ const postSchema = new Schema<PostSchema>(
 		timestamps: true,
 	}
 );
+
+// 텍스트 인덱스
+postSchema.index({ title: 'text', contents: 'text' });
 
 const postModel = model<PostSchema>('Post', postSchema);
 

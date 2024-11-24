@@ -103,22 +103,13 @@ export const getAllPosts = async ({
 	// 검색 조건 생성
 	const searchCondition = buildSearchCondition(search, searchBy);
 
+	// 정렬 조건 생성
 	const sortCondition = buildSortCondition(sort);
 
 	// 검색 결과 총 개수 계산
 	const total = await Post.countDocuments(searchCondition);
 
-	// page 유효성 검사
-	// if (Math.ceil(total / limit) < page) {
-	// 	throw new BadRequestError(`유효하지 않은 page 번호 입니다.`);
-	// }
-
-	// // limit 유효성 검사
-	// if (total < limit) {
-	// 	throw new BadRequestError(`유효하지 않은 limit 입니다.`);
-	// }
-
-	// Aggregation Pipeline
+	// 게시글 조회
 	const rawPosts = await Post.aggregate([
 		{ $match: searchCondition }, // 검색 조건 적용
 		{
