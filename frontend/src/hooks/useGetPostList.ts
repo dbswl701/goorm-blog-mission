@@ -1,12 +1,11 @@
-import { useInfiniteQuery, useQueryClient } from '@tanstack/react-query';
+import { useInfiniteQuery } from '@tanstack/react-query';
 import { getPostList, PostsResponse } from 'apis/getPostList';
-import { useLocation } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 export const useGetPostList = () => {
-	const location = useLocation();
-	const params = new URLSearchParams(location.search);
-	const searchTerm = params.get('search') || '';
-	const sortOption = params.get('sort') || '';
+	const [searchParams] = useSearchParams();
+	const searchTerm = searchParams.get('search') || '';
+	const sortOption = searchParams.get('sort') || '';
 	const {
 		data,
 		isLoading,
@@ -19,7 +18,11 @@ export const useGetPostList = () => {
 	} = useInfiniteQuery<PostsResponse, Error>({
 		queryKey: ['posts'],
 		queryFn: ({ pageParam = 1 }) => {
-			return getPostList({ pageParam, search: searchTerm });
+			return getPostList({
+				pageParam,
+				search: searchTerm,
+				sort: sortOption,
+			});
 		},
 		getNextPageParam: (lastPage) => {
 			const nextPage = lastPage.page + 1;

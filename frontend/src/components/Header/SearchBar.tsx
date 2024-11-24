@@ -1,39 +1,27 @@
 import { useEffect, useState } from 'react';
 import './Header.css';
-import { useGetPostList } from '@hooks/useGetPostList';
-import { toast } from 'react-toastify';
-import { useQueryClient } from '@tanstack/react-query';
-import { useLocation, useNavigate } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 
 const SearchBar = () => {
 	const [search, setSearch] = useState('');
-	// const { refetch } = useGetPostList();
 
-	const navigate = useNavigate();
-	const location = useLocation();
+	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
-		const params = new URLSearchParams(location.search);
-		const searchParams = params.get('search') || '';
-		setSearch(searchParams);
-	}, [location.search]);
+		const currentSearch = searchParams.get('search') || '';
+		setSearch(currentSearch);
+	}, [searchParams]);
 
 	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 		e.preventDefault();
 
-		if (search.trim().length >= 2) {
-			// URL 쿼리 파라미터로 검색어 설정
-			const params = new URLSearchParams(location.search);
-			params.set('search', search.trim());
-			navigate({
-				pathname: location.pathname,
-				search: params.toString(),
-			});
-		} else {
-			toast.error('2자 이상 입력해주세요.', {
-				position: 'top-right',
-			});
-		}
+		// 현재 쿼리 파라미터를 복사
+		const newSearchParams = new URLSearchParams(searchParams);
+
+		newSearchParams.set('search', search.trim()); // search 파라미터 설정
+
+		// 쿼리 파라미터 업데이트
+		setSearchParams(newSearchParams);
 	};
 	return (
 		<div className="search-bar">

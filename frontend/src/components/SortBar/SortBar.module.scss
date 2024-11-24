@@ -1,0 +1,26 @@
+/* components/SortBar.module.scss */
+.sort-bar {
+	display: flex;
+	gap: 10px;
+	margin-bottom: 20px;
+}
+
+.sort-button {
+	padding: 8px 16px;
+	border: none;
+	background-color: #e0e0e0;
+	cursor: pointer;
+	border-radius: 4px;
+	transition:
+		background-color 0.3s,
+		color 0.3s;
+}
+
+.sort-button:hover {
+	background-color: #d5d5d5;
+}
+
+.sort-button.active {
+	background-color: #1976d2;
+	color: white;
+}
