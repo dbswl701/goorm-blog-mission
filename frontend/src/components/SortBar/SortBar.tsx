@@ -1,47 +1,52 @@
 import { useEffect, useState } from 'react';
-import './SortBar.module.scss';
 import { useSearchParams } from 'react-router-dom';
+import styles from './SortBar.module.scss';
+
 const SortBar = () => {
-	const [sort, setSort] = useState('');
+	const [sort, setSort] = useState('latest');
 	const [searchParams, setSearchParams] = useSearchParams();
 
 	useEffect(() => {
 		const currentSort = searchParams.get('sort') || '';
-		setSort(currentSort);
+		setSort(currentSort || 'latest');
 	}, [searchParams]);
 
 	const handleSortChange = (selectedSort: string) => {
-		// 현재 쿼리 파라미터를 복사
 		const newSearchParams = new URLSearchParams(searchParams);
-
-		newSearchParams.set('sort', selectedSort); // sort 파라미터 설정
-
-		// 쿼리 파라미터 업데이트
+		newSearchParams.set('sort', selectedSort);
 		setSearchParams(newSearchParams);
 	};
 
 	return (
-		<div className="sort-bar">
+		<div className={styles['sort-bar']}>
 			<button
-				className={`sort-button ${sort === 'latest' ? 'active' : ''}`}
+				className={`${styles['sort-button']} ${
+					sort === 'latest' ? styles.active : ''
+				}`}
 				onClick={() => handleSortChange('latest')}
 			>
 				최신순
 			</button>
 			<button
-				className={`sort-button ${sort === 'oldest' ? 'active' : ''}`}
+				className={`${styles['sort-button']} ${
+					sort === 'oldest' ? styles.active : ''
+				}`}
 				onClick={() => handleSortChange('oldest')}
 			>
 				오래된순
 			</button>
 			<button
-				className={`sort-button ${sort === 'likes' ? 'active' : ''}`}
+				className={`${styles['sort-button']} ${
+					sort === 'likes' ? styles.active : ''
+				}`}
 				onClick={() => handleSortChange('likes')}
 			>
 				좋아요순
 			</button>
 			<button
-				className={`sort-button ${sort === 'comments' ? 'active' : ''}`}
+				className={`${styles['sort-button']} ${
+					sort === 'comments' ? styles.active : ''
+				}`}
 				onClick={() => handleSortChange('comments')}
 			>
 				댓글순
