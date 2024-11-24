@@ -2,6 +2,7 @@ import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postLike } from 'apis/postLike';
 import { AxiosError } from 'axios';
 import { toast } from 'react-toastify';
+import { queryKeys } from 'utils/queryKeys';
 
 export const useLikePost = () => {
 	const queryClient = useQueryClient();
@@ -16,7 +17,9 @@ export const useLikePost = () => {
 		}) => postLike(postId, isLiked),
 		onMutate: async ({ postId, isLiked }) => {
 			// 옵티미스틱 업데이트
-			await queryClient.cancelQueries({ queryKey: ['post', postId] });
+			await queryClient.cancelQueries({
+				queryKey: queryKeys.post(postId),
+			});
 
 			const previousPost = queryClient.getQueryData<{
 				likeCount: number;

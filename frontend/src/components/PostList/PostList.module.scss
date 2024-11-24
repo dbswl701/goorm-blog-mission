@@ -2,7 +2,7 @@
 	display: block;
 	margin: 20px auto;
 	font-size: 36px;
-	color: var(--color-primary);
+	color: #5ba5ee;
 	background-color: transparent;
 	border: none;
 	cursor: pointer;
@@ -11,7 +11,7 @@
 		color 0.3s ease;
 
 	&:hover {
-		color: var(--color-primary-hover);
+		color: #1976d2;
 		transform: scale(1.2);
 	}
 

@@ -3,6 +3,7 @@ import { deletePost } from 'apis/deletePost';
 import { AxiosError } from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
+import { queryKeys } from 'utils/queryKeys';
 
 export const useDeletePost = () => {
 	const queryClient = useQueryClient();
@@ -13,7 +14,7 @@ export const useDeletePost = () => {
 			toast.success(data.message, {
 				position: 'top-right',
 			});
-			queryClient.invalidateQueries({ queryKey: ['posts'] });
+			queryClient.invalidateQueries({ queryKey: queryKeys.posts() });
 			navigate('/');
 		},
 		onError: (error) => {

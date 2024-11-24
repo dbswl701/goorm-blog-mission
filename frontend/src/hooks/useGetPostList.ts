@@ -1,6 +1,7 @@
 import { useInfiniteQuery } from '@tanstack/react-query';
 import { getPostList, PostsResponse } from 'apis/getPostList';
 import { useSearchParams } from 'react-router-dom';
+import { queryKeys } from 'utils/queryKeys';
 
 export const useGetPostList = () => {
 	const [searchParams] = useSearchParams();
@@ -17,7 +18,7 @@ export const useGetPostList = () => {
 		isFetchingNextPage,
 		refetch,
 	} = useInfiniteQuery<PostsResponse, Error>({
-		queryKey: ['posts'],
+		queryKey: queryKeys.posts(searchTerm, sortOption, filterOption), // Query Key Factory 사용
 		queryFn: ({ pageParam = 1 }) => {
 			return getPostList({
 				pageParam,
