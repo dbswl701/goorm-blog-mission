@@ -3,6 +3,9 @@ import PostItem from '@components/PostListItem';
 import { useGetPostList } from '@hooks/useGetPostList';
 import ScrollToTopButton from '@components/ScrollToTopButton';
 import { useLocation } from 'react-router-dom';
+import styles from './PostList.module.scss';
+import { IoIosArrowDropdownCircle } from 'react-icons/io';
+import PostListSkeleton from '@components/PostListItem/PostListItem.skeleton';
 
 export interface Post {
 	id: string;
@@ -14,7 +17,7 @@ export interface Post {
 	author: string;
 	isLikedByUser: boolean;
 	likeCount: number;
-	commentCount?: number;
+	commentCount: number;
 }
 
 const PostList = () => {
@@ -35,11 +38,14 @@ const PostList = () => {
 		refetch();
 	}, [location.search]);
 
-	if (isLoading) return <div>로딩중</div>;
+	// if (isLoading) return <div>로딩중</div>;
+	if (isLoading) {
+		return <PostListSkeleton />;
+	}
 	if (error) return <div>에러</div>;
 	console.log('posts: ', posts, 'hasNextPage: ', hasNextPage);
 	return (
-		<div>
+		<section>
 			<ul className="list-group list-group-flush py-4">
 				{posts?.pages.map((page, pageIndex) => (
 					<React.Fragment key={pageIndex}>
@@ -51,24 +57,25 @@ const PostList = () => {
 								createdAt={post.createdAt}
 								summary={post.contents}
 								author={post.author}
+								likeCount={post.likeCount}
+								commentCount={post.commentCount}
 							/>
 						))}
 					</React.Fragment>
 				))}
 			</ul>
-			{isFetchingNextPage && <p>더 불러오는 중...</p>}
-			{hasNextPage ? (
+			{isFetchingNextPage && <PostListSkeleton />}
+			{hasNextPage && (
 				<button
 					onClick={() => fetchNextPage()}
-					disabled={isFetchingNextPage}
+					className={styles.loadMoreButton}
+					aria-label="게시글 더 보기"
 				>
-					{isFetchingNextPage ? '로딩 중...' : '로드 더 보기'}
+					<IoIosArrowDropdownCircle />
 				</button>
-			) : (
-				<p>모든 게시글을 불러왔습니다.</p>
 			)}
 			<ScrollToTopButton />
-		</div>
+		</section>
 	);
 };
 

@@ -1,0 +1,82 @@
+.postListItem {
+	display: flex;
+	flex-direction: column;
+	position: relative; /* 하단에 아이콘 배치 */
+}
+
+.postHeader {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+
+	h5 {
+		margin: 0;
+		flex-grow: 1;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+		font-size: 1rem;
+	}
+
+	small {
+		flex-shrink: 0;
+		width: 115px;
+		text-align: right;
+	}
+}
+
+.postSummary {
+	margin: 0.5rem 0;
+	line-height: 1.5;
+	color: #6c757d;
+}
+
+.postFooter {
+	display: flex;
+	justify-content: flex-end; /* 오른쪽 정렬 */
+	align-items: center;
+	margin-top: auto; /* 하단 정렬 */
+	gap: 10px;
+
+	small {
+		display: flex;
+		align-items: center;
+		color: #6c757d;
+		font-size: 0.875rem;
+
+		svg {
+			margin-right: 5px;
+		}
+	}
+}
+
+.postAuthorAndStats {
+	display: flex;
+	flex-direction: row;
+	justify-content: space-between;
+	align-items: center;
+	margin-top: 0.5rem;
+
+	.author {
+		color: #6c757d;
+		font-size: 0.875rem;
+		flex-grow: 1; /* 남는 공간 확보 */
+	}
+
+	.stats {
+		display: flex; /* gap 적용을 위한 flex 설정 */
+		align-items: center;
+		gap: 10px; /* 아이콘과 텍스트 사이 간격 설정 */
+	}
+
+	small {
+		display: flex;
+		align-items: center;
+		color: #6c757d;
+		font-size: 0.875rem;
+
+		svg {
+			margin-right: 5px; /* 아이콘과 숫자 간 간격 */
+		}
+	}
+}

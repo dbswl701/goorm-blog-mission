@@ -1,0 +1,21 @@
+.loadMoreButton {
+	display: block;
+	margin: 20px auto;
+	font-size: 36px;
+	color: var(--color-primary);
+	background-color: transparent;
+	border: none;
+	cursor: pointer;
+	transition:
+		transform 0.3s ease,
+		color 0.3s ease;
+
+	&:hover {
+		color: var(--color-primary-hover);
+		transform: scale(1.2);
+	}
+
+	&:active {
+		transform: scale(1.1);
+	}
+}
