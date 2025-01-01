@@ -1,0 +1,91 @@
+.Write {
+	&__editorContainer {
+		width: 100%;
+		height: calc(100vh - 56px);
+		display: flex;
+		flex-direction: column;
+		padding: 1rem;
+		overflow: hidden; /* 부모 컨테이너에서는 스크롤 방지 */
+
+		@media (max-width: 768px) {
+			padding: 0.5rem;
+		}
+	}
+
+	&__header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		box-sizing: border-box;
+		margin-bottom: 15px;
+	}
+
+	&__title {
+		resize: none;
+		outline: none;
+		border: none;
+		border-bottom: 2px solid gray;
+		width: 100%;
+		padding: 5px 8px;
+		margin-bottom: 10px;
+		background: transparent;
+		font-size: 2rem;
+		font-weight: bold;
+		height: 5.5rem;
+		line-height: 2.5rem;
+	}
+
+	&__submitBtn {
+		padding: 3px 6px;
+		background-color: var(--color-primary);
+		height: 2.5rem;
+		font-size: 1.125rem;
+		color: white;
+		border-radius: 4px;
+		padding: 0px 1.25rem;
+		border: none;
+
+		&:hover {
+			background-color: var(--color-primary-hover);
+		}
+	}
+
+	&__previousBtn {
+		width: 40px;
+		height: 40px;
+		border-radius: 50%;
+		cursor: pointer;
+
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		&:hover {
+			background-color: rgb(209, 209, 209);
+			color: white;
+		}
+	}
+
+	&__editor {
+		flex: 1; /* 남은 공간 차지 */
+		background-color: #ffffff;
+		color: var(--color-fg-default);
+		overflow: auto; /* 스크롤 활성화 */
+		max-height: 66vh; /* 최대 높이 제한 */
+
+		.w-md-editor-toolbar {
+			background-color: #ffffff !important; /* 툴바 배경 */
+			color: black !important;
+		}
+
+		.w-md-editor-preview > .wmde-markdown {
+			background-color: #ffffff !important; /* 미리보기 배경 */
+			color: black !important;
+		}
+	}
+	&__warning {
+		color: red;
+		font-size: 0.875rem;
+		margin-top: 5px;
+	}
+}

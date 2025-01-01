@@ -1,8 +1,8 @@
-import useAuth from '@hooks/useAuth';
 import PostList from '@components/PostList';
+import SortBar from '@components/SortBar';
 
-const Home = () => {
-	const username = useAuth();
+const Home = ({ username }: { username: string | null }) => {
+	// const username = useAuth();
 	if (username === '') {
 		location.href = '/login';
 		return;
@@ -10,6 +10,7 @@ const Home = () => {
 
 	return (
 		<div>
+			<SortBar />
 			<PostList />
 		</div>
 	);

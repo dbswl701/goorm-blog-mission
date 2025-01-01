@@ -1,6 +1,26 @@
 .Layout {
 	&__main {
+		padding: 16px;
 		padding-top: 56px;
 		min-height: 100vh;
+		width: 100%; /* 기본 값: 화면 크기에 따라 동적 조정 */
+
+		@media (min-width: 768px) {
+			width: 720px; /* 태블릿 이상 */
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		@media (min-width: 992px) {
+			width: 800px; /* 데스크톱 중간 화면 */
+			margin-left: auto;
+			margin-right: auto;
+		}
+
+		@media (min-width: 1200px) {
+			width: 900px; /* 데스크톱 큰 화면 */
+			margin-left: auto;
+			margin-right: auto;
+		}
 	}
 }

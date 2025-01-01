@@ -1,0 +1,156 @@
+/* src/components/Header/Header.css */
+.header {
+	background-color: #fff;
+	border-bottom: 1px solid #e0e0e0;
+	position: fixed;
+	width: 100%;
+	top: 0;
+	z-index: 100;
+}
+
+.header-content {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 20px;
+}
+
+.logo a {
+	text-decoration: none;
+	font-size: 24px;
+	font-weight: bold;
+	color: #333;
+}
+
+.menu {
+	display: flex;
+	align-items: center;
+}
+
+.icon-button {
+	background: none;
+	border: none;
+	margin-left: 15px;
+	font-size: 20px;
+	cursor: pointer;
+	color: #333;
+}
+
+.search-bar-container {
+	position: fixed;
+	left: 0;
+	top: 56px;
+	width: 100%;
+	max-height: 0;
+	/* overflow: hidden; */
+	transition: max-height 0.3s ease-in-out; /* 없어지는것도 넣기 */
+}
+
+.search-bar-container.open {
+	max-height: 100px; /* 필요에 따라 조정 */
+}
+
+/* ///// searchbar */
+.search-bar {
+	background-color: #f9f9f9;
+	padding: 10px 20px;
+	border-bottom: 1px solid #e0e0e0;
+}
+.fixed-dropdown-button {
+	width: 100px;
+}
+
+.search-bar form {
+	display: flex;
+	margin-bottom: 1rem;
+
+	align-items: center;
+	justify-content: center;
+}
+
+.search-bar input {
+	flex: 1;
+	padding: 8px 12px;
+	border: 1px solid #ccc;
+	border-radius: 4px;
+}
+
+.search-button {
+	margin-left: 10px;
+	padding: 8px 16px;
+	background-color: #28a745;
+	border: none;
+	border-radius: 4px;
+	color: #fff;
+	cursor: pointer;
+	width: 100px;
+}
+
+.search-button:hover {
+	background-color: #218838;
+}
+
+/* 프로필 메뉴 */
+/* src/components/Header/ProfileMenu.css */
+.profile-menu {
+	position: absolute;
+	top: 60px; /* 헤더 높이에 따라 조정 */
+	right: 20px;
+	width: 200px;
+	background-color: #fff;
+	border: 1px solid #e0e0e0;
+	border-radius: 4px;
+	box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+	z-index: 200;
+}
+
+.profile-menu-header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 10px 15px;
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-menu-header button {
+	background: none;
+	border: none;
+	font-size: 16px;
+	cursor: pointer;
+}
+
+.profile-menu ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+.profile-menu li {
+	border-bottom: 1px solid #e0e0e0;
+}
+
+.profile-menu li:last-child {
+	border-bottom: none;
+}
+
+.profile-menu a {
+	display: block;
+	padding: 10px 15px;
+	text-decoration: none;
+	color: #333;
+}
+
+.profile-menu > ul > li > span {
+	display: block;
+	padding: 10px 15px;
+	text-decoration: none;
+	color: #333;
+}
+
+.profile-menu a:hover {
+	background-color: #f1f1f1;
+}
+
+.profile-menu > ul > li > span:hover {
+	background-color: #f1f1f1;
+}

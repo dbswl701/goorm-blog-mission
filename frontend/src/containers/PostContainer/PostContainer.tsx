@@ -1,40 +1,39 @@
-import { useState, useEffect } from 'react';
-import axios from 'axios';
-
-import { PostInterface } from '@type/post';
 import Post from '@components/Post';
-
+import PostSkeleton from '@components/Post/PostSkeleton';
+import useAuth from '@hooks/useAuth';
+import { useGetPost } from '@hooks/useGetPost';
 interface PostContainernterface {
 	id: string;
+	handleDeleteClick: () => void;
 }
 
-const PostContainer = ({ id }: PostContainernterface) => {
-	const [data, setData] = useState<PostInterface | null>(null);
+const PostContainer = ({ id, handleDeleteClick }: PostContainernterface) => {
+	const { data, isLoading, error } = useGetPost(id);
+	const username = useAuth();
+	if (username === '') {
+		location.href = '/login';
+		return;
+	}
 
-	useEffect(() => {
-		const fetchData = async () => {
-			try {
-				const { data } = await axios.get(
-					`${import.meta.env.VITE_SERVER_URL}/posts/${id}`
-				);
-				setData(data);
-			} catch (error) {
-				console.error('Error fetching data: ', error);
-			}
-		};
-
-		fetchData();
-	}, []);
-
+	if (isLoading) {
+		return <PostSkeleton />;
+	}
 	return (
-		data && (
-			<Post
-				title={data.title}
-				contents={data.contents}
-				author={data.author}
-				createdAt={data.createdAt}
-			/>
-		)
+		<>
+			{data && (
+				<Post
+					title={data.title}
+					contents={data.contents}
+					author={data.author}
+					createdAt={data.createdAt}
+					id={data.id}
+					likeCount={data.likeCount}
+					isLikedByUser={data.isLikedByUser}
+					handleDeleteClick={handleDeleteClick}
+					username={username!}
+				/>
+			)}
+		</>
 	);
 };
 

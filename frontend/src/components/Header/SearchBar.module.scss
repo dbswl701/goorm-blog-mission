@@ -1,0 +1,66 @@
+.container {
+	margin: 0 auto;
+	width: 100%;
+	padding: 0 16px;
+
+	@media (min-width: 768px) {
+		width: 720px;
+	}
+
+	@media (min-width: 992px) {
+		width: 800px;
+	}
+
+	@media (min-width: 1200px) {
+		width: 900px;
+	}
+}
+
+.searchBar {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 8px 0;
+	border-bottom: 1px solid #e0e0e0;
+	background-color: #f9f9f9;
+
+	.input-group {
+		display: flex;
+		align-items: center;
+		width: 100%;
+
+		.form-control {
+			flex: 1;
+			padding: 8px 12px;
+			border: 1px solid #ccc;
+			border-radius: 4px;
+		}
+
+		.fixed-dropdown-button {
+			padding: 8px 16px;
+			border-radius: 4px;
+			border: 1px solid #ccc;
+			background-color: #fff;
+			cursor: pointer;
+		}
+	}
+
+	.search-button {
+		margin-left: 10px;
+		padding: 8px 16px;
+		background-color: #28a745;
+		border: none;
+		border-radius: 4px;
+		color: #fff;
+		cursor: pointer;
+
+		&:hover {
+			background-color: #218838;
+		}
+	}
+}
+
+.dropdownButton {
+	width: 158px; /* 버튼의 기본 너비를 늘림 */
+	text-align: center;
+}

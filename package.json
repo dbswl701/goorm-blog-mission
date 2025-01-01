@@ -10,6 +10,7 @@
 		"format:be": "prettier ./backend --write",
 		"format": "npm run format:fe && npm run format:be",
 		"start:db": "mongod",
+		"start:db-replica": "mongod --replSet rs0 --bind_ip_all --port 27017 --dbpath /data/db",
 		"start:dev": "concurrently \"cd backend && npm run dev\" \"cd frontend && npm run dev\"",
 		"start:prod": "concurrently \"cd backend && npm run build && npm start\" \"cd frontend && npm run build && npm run preview\""
 	},
@@ -21,5 +22,10 @@
 		"eslint-plugin-react-hooks": "^4.6.0",
 		"eslint-plugin-react-refresh": "^0.4.6",
 		"prettier": "3.3.2"
+	},
+	"dependencies": {
+		"@uiw/react-md-editor": "^4.0.4",
+		"react-toastify": "^10.0.6",
+		"remark-breaks": "^4.0.0"
 	}
 }

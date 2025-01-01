@@ -1,39 +1,80 @@
-import { getPostById, getAllPosts } from '../models/post/post';
+import { NotFoundError } from '../errors/NotFoundError';
+import {
+	getPostById,
+	getAllPosts,
+	createPostModel,
+	updatePostModel,
+	deletePostMoel,
+	GetAllPosts,
+} from '../models/post/post';
 
 import { PostInterface } from '../types';
 
-export const getPost = async (id: string): Promise<PostInterface> => {
-	try {
-		const post = await getPostById(id);
+export const getPost = async (
+	id: string,
+	currentUserId: string
+): Promise<PostInterface> => {
+	const post = await getPostById(id, currentUserId);
 
-		if (!post) {
-			throw new Error('Not found post');
-		}
-
-		return post;
-	} catch (error: any) {
-		throw new Error(error.message || 'Failed to fetch post');
-	}
+	return post;
 };
 
+// 게시글 생성
+export const createPost = async (
+	title: string,
+	contents: string,
+	authorId: string
+): Promise<PostInterface> => {
+	const post = await createPostModel(title, contents, authorId);
+	return post;
+};
+
+// 게시글 수정
+export const updatePost = async (
+	id: string,
+	title: string,
+	contents: string,
+	authorId: string
+): Promise<PostInterface> => {
+	const updatedPost = await updatePostModel(id, title, contents, authorId);
+	return updatedPost;
+};
+
+// 게시글 삭제
+export const deletePost = async (
+	id: string,
+	authorId: string
+): Promise<void> => {
+	await deletePostMoel(id, authorId);
+};
+
+export interface GetPostsParams {
+	page: number;
+	limit: number;
+	sort: string;
+	search: string;
+	searchBy: string;
+}
+
+// 게시글을 가져오는 함수 수정
 export const getPosts = async ({
-	summary = false,
-}: {
-	summary: boolean;
-}): Promise<PostInterface[]> => {
-	try {
-		if (typeof summary !== 'boolean') {
-			throw new Error('summary is invalid');
-		}
+	page,
+	limit,
+	sort,
+	search,
+	searchBy,
+}: GetPostsParams): Promise<{ posts: GetAllPosts[]; total: number }> => {
+	const { posts, total } = await getAllPosts({
+		page,
+		limit,
+		sort,
+		search,
+		searchBy,
+	});
 
-		const post = await getAllPosts({ summary });
-
-		if (!post) {
-			throw new Error('Not found posts');
-		}
-
-		return post;
-	} catch (error: any) {
-		throw new Error(error.message || 'Failed to fetch post');
+	if (!posts) {
+		throw new Error('Not found posts');
 	}
+
+	return { posts, total };
 };
